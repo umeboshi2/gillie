@@ -1,0 +1,3 @@
+[run]
+source = gillie
+omit = gillie/test*
