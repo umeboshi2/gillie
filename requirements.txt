@@ -1,11 +1,13 @@
 gunicorn
-Flask
 pyramid
 SQLAlchemy
-pyramid_mako
-pyramid_tm
 transaction
 zope.sqlalchemy
 pyramid_retry
 pyramid_debugtoolbar
+pyramid_mako
+pyramid_jinja2
+pyramid_tm
+cornice
+psycopg2
 ./
