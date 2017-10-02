@@ -21,6 +21,7 @@ requires = [
     'gunicorn',
     'cornice',
     'psycopg2',
+    'pyramid_jwt',
 ]
 
 tests_require = [
