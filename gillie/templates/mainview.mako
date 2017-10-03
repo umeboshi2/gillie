@@ -13,7 +13,9 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Rambla" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Play" rel="stylesheet" type="text/css">
-    <script type="text/javascript" charset="utf-8" src="${jspath}/${appname}.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${jspath}/${manifest['vendor.js']}"></script>
+    <% appfile = "%s.js" % appname %>
+    <script type="text/javascript" charset="utf-8" src="${jspath}/${manifest[appfile]}"></script>
   </head>
   <body>
   </body>
