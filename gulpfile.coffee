@@ -17,6 +17,20 @@ coffee = require 'gulp-coffee'
 
 webpack = require 'webpack'
 
+DevServer = require 'webpack-dev-server'
+
+gulp.task 'webpack:coffee', (callback) ->
+  DevConfig = require './webpack.config'
+  devCompiler = webpack DevConfig  # run webpack
+  devCompiler.run (err, stats) ->
+    throw new gutil.PluginError('webpack:coffee', err) if err
+    gutil.log "[webpack:coffee]", stats.toString(colors: true)
+    callback()
+    return
+  return
+  
+
+
 #gulp.task 'serve', ['coffee', 'ghost-config'], (callback) ->
 gulp.task 'serve', (callback) ->
   process.env.__DEV_MIDDLEWARE__ = 'true'
@@ -89,3 +103,6 @@ gulp.task 'default', ->
   
 gulp.task 'production', ->
   gulp.start 'webpack:build-prod'
+
+gulp.task 'watch', ['webpack:coffee'], ->
+  gulp.watch ['./client/**/*.coffee'], ['webpack:coffee']
