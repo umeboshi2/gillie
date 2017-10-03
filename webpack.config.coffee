@@ -83,7 +83,8 @@ else if BuildEnvironment is 'production'
     new webpack.optimize.UglifyJsPlugin
       compress:
         warnings: true
-    new CompressionPlugin()
+    # FIXME restore CompressionPlugin!!!!!
+    #new CompressionPlugin()
     #new ChunkManifestPlugin
     #  filename: 'chunk-manifest.json'
     #  manifestVariable: 'webpackManifest'
