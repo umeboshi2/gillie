@@ -21,3 +21,6 @@ coverage
 test
 
 node_modules
+/assets/client-dev
+/assets/client/stats.json
+/assets/client/stats.json.gz
