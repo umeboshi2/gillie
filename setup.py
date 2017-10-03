@@ -22,6 +22,8 @@ requires = [
     'cornice',
     'psycopg2',
     'pyramid_jwt',
+    'ziggurat_foundations',
+    'bcrypt',
 ]
 
 tests_require = [
