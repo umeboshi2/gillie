@@ -2,7 +2,42 @@
 
 This repository provides a sample Python web application implemented using the Flask web framework and hosted using ``gunicorn``. It is intended to be used to demonstrate deployment of Python web applications to OpenShift 3.
 
-## Implementation Notes
+## Quick Deploy 
+
+```
+oc new-app python:2.7~https://github.com/umeboshi2/gillie.git
+```
+
+
+## Things to do.....
+
+### Configuration
+
+* Use more environment variables.
+
+* Parse config for client, remove ~/config.coffee
+
+### Database 
+
+* learn and setup zigg
+
+* learn and setup alembic
+
+### Auth 
+
+* use jsonwebtokens for auth, get it to match client code
+
+### Pyramid
+
+* serve static .gz files
+
+
+
+
+
+## Old Information
+
+### Implementation Notes
 
 This sample Python application relies on the support provided by the default S2I builder for deploying a WSGI application using the ``gunicorn`` WSGI server. The requirements which need to be satisfied for this to work are:
 
@@ -14,7 +49,7 @@ In addition, the ``.s2i/environment`` file has been created to allow environment
 
 * The environment variable ``APP_CONFIG`` has been set to declare the name of the config file for ``gunicorn``.
 
-## Deployment Steps
+### Deployment Steps
 
 To deploy this sample Python web application from the OpenShift web console, you should select ``python:2.7``, ``python:3.3``, ``python:3.4`` or ``python:latest``, when using _Add to project_. Use of ``python:latest`` is the same as having selected the most up to date Python version available, which at this time is ``python:3.4``.
 
