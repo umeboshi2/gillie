@@ -31,7 +31,7 @@ def get_manifest(settings):
         raise RuntimeError, "No manifest.json!"
     return json.load(file(filename))
 
-def make_page(appname, settings, basecolor=None):
+def make_page(appname, settings, basecolor=None, request=None):
     template = 'gillie:templates/mainview.mako'
     if basecolor is None:
         basecolor = settings.get('default.css.basecolor', 'BlanchedAlmond')
@@ -43,7 +43,7 @@ def make_page(appname, settings, basecolor=None):
                csspath=csspath,
                jspath=jspath,
                manifest=manifest)
-    return render(template, env)
+    return render(template, env, request=request)
     
 class ClientView(BaseUserViewCallable):
     def __init__(self, request):
@@ -86,7 +86,8 @@ class ClientView(BaseUserViewCallable):
         settings = self.get_app_settings()
         if appname is None:
             appname = settings.get('default.js.mainapp', 'frontdoor')
-        content = make_page(appname, settings, basecolor=basecolor)
+        content = make_page(appname, settings, basecolor=basecolor,
+                            request=self.request)
         self.response = Response(body=content)
         self.response.encode_content()
         
