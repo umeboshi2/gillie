@@ -1,6 +1,7 @@
 gunicorn
 pyramid
 SQLAlchemy
+alembic
 transaction
 zope.sqlalchemy
 pyramid_retry
@@ -8,6 +9,7 @@ pyramid_debugtoolbar
 pyramid_mako
 pyramid_jinja2
 pyramid_tm
+pyramid_webpack
 cornice
 psycopg2
 pyramid_jwt
