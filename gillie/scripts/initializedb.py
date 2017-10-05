@@ -16,6 +16,8 @@ from ..models import (
     get_tm_session,
     )
 from ..models import MyModel
+from ..models.uzig import User, Group, UserGroup
+
 
 
 def usage(argv):
@@ -43,3 +45,23 @@ def main(argv=sys.argv):
 
         model = MyModel(name='one', value=1)
         dbsession.add(model)
+
+
+        admins = Group(group_name="admins")
+        dbsession.add(admins)
+        print 'ADMINS', admins
+        #admins = dbsession.merge(admins)
+        dbsession.flush()
+        
+        user = User(user_name='admin', name='Admin User',
+                    email='admin@localhost')
+        dbsession.add(user)
+        dbsession.flush()
+        user.set_password('admin')
+        user.regenerate_security_code()
+        dbsession.flush()
+        
+        print user, admins
+        group_entry = UserGroup(group_id=admins.id, user_id=user.id)
+        dbsession.add(group_entry)
+        

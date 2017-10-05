@@ -58,7 +58,7 @@ class UserResourcePermission(UserResourcePermissionMixin, Base):
 
 class User(UserMixin, Base):
     # ... your own properties....
-    pass
+    name = sa.Column(sa.UnicodeText())
 
 class ExternalIdentity(ExternalIdentityMixin, Base):
     pass

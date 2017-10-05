@@ -1,37 +1,46 @@
 from pyramid.response import Response
 from pyramid.view import view_config
+import pyramid.httpexceptions as exc
 
 from sqlalchemy.exc import DBAPIError
 from ziggurat_foundations.models.services.user import UserService
 
 from ..models.uzig import User
 
-def authenticate(request, login, password):
-    return 'user_id'
+#{uid: 1, username: "admin", name: "Admin User", iat: 1507158526, exp: 1507162126}
 
-def make_token(request, user_id):
-    return request.create_jwt_token(user_id, 100, name='user_id')
+def authenticate(request, login, password):
+    users = UserService()
+    user = users.by_user_name(login, db_session=request.dbsession)
+    print "USER", user
+    return user
+
+def make_token(request, user):
+    claims = dict(name=user.name, user_name=user.user_name,
+                  email=user.email, uid=user.id)
+    return request.create_jwt_token(user.id, 100, **claims)
 
 def login(request):
     login = request.POST['username']
     password = request.POST['password']
-    user_id = authenticate(request, login, password)
-    if user_id:
+    user = authenticate(request, login, password)
+    if user:
         return {
             'result': 'ok',
-            'token': make_token(request, user_id)
+            'token': make_token(request, user)
         }
     else:
-        return {
-            'result': 'error'
-        }
+        raise exc.HTTPUnauthorized()
 
 
 def refresh(request):
-    user = request.user
-    print "USER", user
-    return dict(result='ok',
-                token=make_token(request, user),
-                )
+    if request.authenticated_userid:
+        user = request.user
+        print "USER", user
+        return dict(result='ok',
+                    token=make_token(request, user),
+        )
+    else:
+        raise exc.HTTPUnauthorized()
 
     
