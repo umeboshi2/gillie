@@ -1,6 +1,3 @@
-import os
-import json
-
 from pyramid.renderers import render
 from pyramid.response import Response
 
@@ -19,30 +16,16 @@ class MyResource(object):
         self.__name__ = name
         self.__parent__ = parent
 
-def get_manifest(settings):
-    jspath = settings.get('default.js.path', '/assets/client')
-    while jspath.startswith('/'):
-        jspath = jspath[1:]
-    # FIXME - find a better way
-    views_dirname = os.path.dirname(__file__)
-    repodir = os.path.abspath(os.path.join(views_dirname, '../../'))
-    filename = os.path.join(repodir, jspath, 'manifest.json')
-    if not os.path.isfile(filename):
-        raise RuntimeError, "No manifest.json!"
-    return json.load(file(filename))
-
 def make_page(appname, settings, basecolor=None, request=None):
     template = 'gillie:templates/mainview.mako'
     if basecolor is None:
         basecolor = settings.get('default.css.basecolor', 'BlanchedAlmond')
     csspath = settings.get('default.css.path', '/assets/stylesheets')
     jspath = settings.get('default.js.path', '/assets/client')
-    manifest = get_manifest(settings)
     env = dict(appname=appname,
                basecolor=basecolor,
                csspath=csspath,
-               jspath=jspath,
-               manifest=manifest)
+               jspath=jspath)
     return render(template, env, request=request)
     
 class ClientView(BaseUserViewCallable):

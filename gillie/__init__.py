@@ -1,5 +1,6 @@
 from pyramid.config import Configurator
 
+from pyramid.authorization import ACLAuthorizationPolicy
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -10,19 +11,28 @@ def main(global_config, **settings):
     config.include('cornice')
     config.include('.models')
     config.include('.routes')
-    #orig_views = ['default', 'notfound']
-    orig_views = ['notfound']
-    for view in orig_views:
-        config.scan('.views.%s' % view)
-    new_views = ['sitecontent']
-    for view in new_views:
+
+    config.set_jwt_authentication_policy('secret')
+    authz_policy = ACLAuthorizationPolicy()
+    config.set_authorization_policy(authz_policy)
+
+    scan_views = ['notfound', 'sitecontent', 'userauth']
+    for view in scan_views:
         config.scan('.views.%s' % view)
     client_view = '.views.client.ClientView'
     config.add_route('home', '/')
     config.add_route('apps', '/app/{appname}')
     config.add_view(client_view, route_name='home')
     config.add_view(client_view, route_name='apps')
-    config.add_view(client_view, name='login')
-    config.add_view(client_view, name='logout')
+    #config.add_view(client_view, name='login')
+    #config.add_view(client_view, name='logout')
+    lview = '.views.userauth.login'
+    config.add_route('login', '/login')
+    config.add_view(lview, route_name='login', request_method='POST',
+                    renderer='json')
+
+    config.add_route('auth_refresh', '/auth/refresh')
+    config.add_view('.views.userauth.refresh', route_name='auth_refresh',
+                    request_method='GET', renderer='json')
     
     return config.make_wsgi_app()

@@ -40,3 +40,5 @@ class SerialBase(object):
         return data
     
 
+def getDBSession(request):
+    return request.dbsession
