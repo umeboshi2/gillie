@@ -71,8 +71,9 @@ class LoginView extends BaseView
         
       error: (response) =>
         if __DEV__
-          console.log "error", response
-        MessageChannel.request 'warning', response.responseText
+          console.log "error", response.responseJSON
+        msg = response.responseJSON
+        MessageChannel.request 'danger', msg.message
         @trigger 'save:form:failure', @model
     console.log "returning xhr", xhr
     
