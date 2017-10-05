@@ -1,3 +1,4 @@
+import os
 from pyramid.config import Configurator
 
 from pyramid.authorization import ACLAuthorizationPolicy
@@ -12,7 +13,10 @@ def main(global_config, **settings):
     config.include('.models')
     config.include('.routes')
 
-    config.set_jwt_authentication_policy('secret')
+    # FIXME make tests
+    JWT_SECRET = os.environ.get('JWT_SECRET', 'secret')
+    config.set_jwt_authentication_policy(JWT_SECRET)
+    
     authz_policy = ACLAuthorizationPolicy()
     config.set_authorization_policy(authz_policy)
 
