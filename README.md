@@ -31,6 +31,10 @@ oc new-app python:2.7~https://github.com/umeboshi2/gillie.git
 
 * serve static .gz files
 
+* Consider CDN for some files.
+
+	- https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css
+	
 
 
 
