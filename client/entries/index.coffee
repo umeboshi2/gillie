@@ -35,10 +35,14 @@ ms_remaining = (token) ->
   now = new Date()
   exp = new Date(token.exp * 1000)
   return exp - now
+
+# https://stackoverflow.com/a/32108184
+token_missing = (token) ->
+  (Object.keys(token).length == 0 && token.constructor == Object)  
   
 access_time_remaining = ->
   token = MainChannel.request 'main:app:decode-auth-token'
-  if not token
+  if token_missing token
     return 0
   remaining = ms_remaining token
   return Math.floor(remaining / 1000)
@@ -55,7 +59,6 @@ show_footer = ->
 keep_token_fresh = ->
   token = MainChannel.request 'main:app:decode-auth-token'
   remaining = ms_remaining token
-  #console.log 'remaining', remaining
   interval = ms MainAppConfig.authToken.refreshInterval
   multiple = MainAppConfig.authToken.refreshIntervalMultiple
   access_period = 1000 * (token.exp - token.iat)
@@ -87,7 +90,8 @@ app.on 'start', ->
   
   
 remaining = access_time_remaining()
-if remaining <= 0 and MainChannel.request 'main:app:decode-auth-token'
+token = MainChannel.request 'main:app:decode-auth-token'
+if remaining <= 0 and not token_missing token
   MessageChannel.request 'warning', 'deleting expired access token'
   MainChannel.request 'main:app:destroy-auth-token'
 
