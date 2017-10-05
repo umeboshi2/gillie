@@ -30,12 +30,15 @@ WebPackOutputFilename =
 localBuildDir =
   dev: "assets/client-dev"
   production: "assets/client"
-  
+
+publicPath = localBuildDir[BuildEnvironment] + '/'
+if BuildEnvironment is 'dev'
+  publicPath = "http://localhost:8081/#{publicPath}"
 WebPackOutput =
   filename: WebPackOutputFilename[BuildEnvironment]
   path: path.join __dirname, localBuildDir[BuildEnvironment]
-  publicPath: localBuildDir[BuildEnvironment] + '/'
-
+  publicPath: publicPath
+    
 DefinePluginOpts =
   dev:
     __DEV__: 'true'
@@ -111,5 +114,15 @@ WebPackConfig =
 
 if BuildEnvironment is 'dev'
   WebPackConfig.devtool = 'source-map'
-  
+  WebPackConfig.devServer =
+    host: 'localhost'
+    port: 8081
+    historyApiFallback: true
+    stats:
+      colors: true
+      modules: false
+      chunks: true
+      maxModules: 9999
+      #reasons: true
+      
 module.exports = WebPackConfig
