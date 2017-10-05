@@ -1,7 +1,8 @@
 import os
 from pyramid.config import Configurator
-
 from pyramid.authorization import ACLAuthorizationPolicy
+
+from ziggurat_foundations.models import groupfinder
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -15,7 +16,8 @@ def main(global_config, **settings):
 
     # FIXME make tests
     JWT_SECRET = os.environ.get('JWT_SECRET', 'secret')
-    config.set_jwt_authentication_policy(JWT_SECRET)
+    config.set_jwt_authentication_policy(JWT_SECRET,
+                                         callback=groupfinder)
     
     authz_policy = ACLAuthorizationPolicy()
     config.set_authorization_policy(authz_policy)
