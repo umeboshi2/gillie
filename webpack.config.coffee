@@ -5,6 +5,7 @@ webpack = require 'webpack'
 ManifestPlugin = require 'webpack-manifest-plugin'
 StatsPlugin = require 'stats-webpack-plugin'
 GoogleFontsPlugin = require 'google-fonts-webpack-plugin'
+BundleTracker = require 'webpack-bundle-tracker'
 
 #loaders = require 'tbirds/src/webpack/loaders'
 vendor = require 'tbirds/src/webpack/vendor'
@@ -70,6 +71,8 @@ common_plugins = [
   #    {family: 'Architects Daughter'}
   #    {family: 'Source Sans Pro'}
   #    ]
+  new BundleTracker
+    filename: "./#{localBuildDir[BuildEnvironment]}/bundle-stats.json"
 
   ]
 
@@ -106,4 +109,7 @@ WebPackConfig =
     loaders: loaders
   resolve: resolve
 
+if BuildEnvironment is 'dev'
+  WebPackConfig.devtool = 'source-map'
+  
 module.exports = WebPackConfig
