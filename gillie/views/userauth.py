@@ -18,7 +18,7 @@ def authenticate(request, login, password):
 def make_token(request, user):
     claims = dict(name=user.name, user_name=user.user_name,
                   email=user.email, uid=user.id)
-    return request.create_jwt_token(user.id, 100, **claims)
+    return request.create_jwt_token(user.id, **claims)
 
 def login(request):
     login = request.POST['username']
@@ -36,11 +36,9 @@ def login(request):
 def refresh(request):
     if request.authenticated_userid:
         user = request.user
-        print "USER", user
         return dict(result='ok',
                     token=make_token(request, user),
         )
     else:
         raise exc.HTTPUnauthorized()
-
     
