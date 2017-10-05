@@ -26,6 +26,7 @@ requires = [
     'pyramid_jwt',
     'ziggurat_foundations',
     'bcrypt',
+    'wsgiprox',
 ]
 
 tests_require = [

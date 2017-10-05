@@ -15,4 +15,5 @@ psycopg2
 pyramid_jwt
 ziggurat_foundations
 bcrypt
+wsgiprox
 ./
