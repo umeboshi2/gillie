@@ -17,6 +17,8 @@ from ..models import (
     )
 from ..models import MyModel
 from ..models.uzig import User, Group, UserGroup
+from ..models.uzig import GroupPermission
+
 
 
 
@@ -49,19 +51,34 @@ def main(argv=sys.argv):
 
         admins = Group(group_name="admins")
         dbsession.add(admins)
-        print 'ADMINS', admins
-        #admins = dbsession.merge(admins)
         dbsession.flush()
-        
-        user = User(user_name='admin', name='Admin User',
-                    email='admin@localhost')
-        dbsession.add(user)
+
+        users = Group(group_name="users")
+        dbsession.add(users)
         dbsession.flush()
-        user.set_password('admin')
-        user.regenerate_security_code()
+
+    
+        
+        #admin = User(user_name='admin', name='Admin User',
+        #            email='admin@localhost')
+        admin = User()
+        admin.user_name = 'admin'
+        admin.email = 'admin@localhost'
+        admin.name = 'Admin User'
+        
+        dbsession.add(admin)
         dbsession.flush()
-        
-        print user, admins
-        group_entry = UserGroup(group_id=admins.id, user_id=user.id)
-        dbsession.add(group_entry)
-        
+        admin.set_password('admin')
+        admin.regenerate_security_code()
+        dbsession.flush()
+
+        for grp in [admins, users]:
+            ug = UserGroup(group_id=grp.id, user_id=admin.id)
+            dbsession.add(ug)
+
+
+        ADMIN_PERMISSIONS = ['read', 'edit', 'create', 'delete']
+        for perm in ADMIN_PERMISSIONS:
+            gp = GroupPermission(perm_name=perm,
+                                 group_id=admins.id)
+            dbsession.add(gp)
