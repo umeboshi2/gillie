@@ -8,6 +8,9 @@ config.brand.url = '#'
 
 config.authToken = {}
 config.authToken.refreshInterval = '5m'
+# for testing authToken
+if __DEV__ and false
+  config.authToken.refreshInterval = '10s'
 config.authToken.refreshIntervalMultiple = 3
 
 misc_menu =

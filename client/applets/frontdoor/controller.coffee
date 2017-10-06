@@ -17,7 +17,7 @@ ResourceChannel = Backbone.Radio.channel 'resources'
 tc = require 'teacup'
 
 class ReadMeModel extends Backbone.Model
-  url: "https://raw.githubusercontent.com/umeboshi2/flathead/master/README.md"
+  url: "https://raw.githubusercontent.com/umeboshi2/gillie/master/README.md"
   fetch: (options) ->
     options = options or {}
     options.dataType = 'text'

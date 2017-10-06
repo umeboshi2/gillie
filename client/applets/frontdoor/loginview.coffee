@@ -53,10 +53,6 @@ class LoginView extends BaseView
   saveModel: ->
     username  = @model.get 'username'
     password = @model.get 'password'
-    if __DEV__
-      config = require('../../../config').development
-      username = config.adminUser.username
-      password = config.adminUser.password
     xhr = $.ajax
       url: '/login'
       type: 'POST'
