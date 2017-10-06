@@ -1,4 +1,5 @@
 gunicorn
+plaster_pastedeploy
 pyramid
 SQLAlchemy
 alembic
@@ -11,6 +12,7 @@ pyramid_jinja2
 pyramid_tm
 pyramid_webpack
 cornice
+rest_toolkit
 psycopg2
 pyramid_jwt
 ziggurat_foundations
