@@ -7,8 +7,10 @@ from sqlalchemy import (
     UnicodeText,
     DateTime,
     PickleType,
+    Boolean,
     Enum,
     func,
+    ForeignKey,
 )
 
 from .meta import Base
