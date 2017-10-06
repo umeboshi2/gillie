@@ -17,6 +17,9 @@ oc new-app python:2.7~https://github.com/umeboshi2/gillie.git
 
 * Parse config for client, remove ~/config.coffee
 
+* client config
+
+
 ### Database 
 
 * learn and setup zigg
@@ -27,6 +30,9 @@ oc new-app python:2.7~https://github.com/umeboshi2/gillie.git
 
 * use jsonwebtokens for auth, get it to match client code
 
+* setup groups and permissions
+
+
 ### Pyramid
 
 * serve static .gz files
@@ -35,8 +41,27 @@ oc new-app python:2.7~https://github.com/umeboshi2/gillie.git
 
 	- https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css
 	
+	
+
+### Client
+
+* Don't perform initial /auth/refresh if no token exists.
 
 
+### Working with Alembic and ziggarut_foundations
+
+```
+# create the initial database
+createdb gillie
+# upgrade db to zigg skeleton
+alembic -c zig-init-dev.ini upgrade head
+# generate new migration from app code
+alembic -c development.ini revision --autogenerate -m "Added initial stuff"
+# perform new migration for app
+alembic -c development.ini upgrade head
+# populate db
+initialize_gillie_db development.ini 
+```
 
 
 ## Old Information
