@@ -16,6 +16,7 @@ requires = [
     'alembic',
     'transaction',
     'zope.sqlalchemy',
+    'paginate_sqlalchemy',
     'pyramid_retry',
     'pyramid_debugtoolbar',
     'pyramid_mako',
