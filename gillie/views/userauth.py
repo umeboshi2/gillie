@@ -12,12 +12,12 @@ from ..models.uzig import User
 def authenticate(request, login, password):
     users = UserService()
     user = users.by_user_name(login, db_session=request.dbsession)
-    print "USER", user
     return user
 
 def make_token(request, user):
+    groups = [g.group_name for g in user.groups]
     claims = dict(name=user.name, user_name=user.user_name,
-                  email=user.email, uid=user.id)
+                  email=user.email, uid=user.id, groups=groups)
     return request.create_jwt_token(user.id, **claims)
 
 def login(request):

@@ -24,7 +24,7 @@ user_menu = tc.renderable (user) ->
       tc.li ->
         tc.a href:'#profile', 'User Profile'
       # FIXME need better way to figure out admin access
-      if user.username is 'admin'
+      if 'admins' in user.groups
         tc.li ->
           tc.a href:'/admin', 'Administration'
         tc.li ->
