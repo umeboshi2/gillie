@@ -21,7 +21,6 @@ from ..models.uzig import GroupPermission
 
 
 
-
 def usage(argv):
     cmd = os.path.basename(argv[0])
     print('usage: %s <config_uri> [var=value]\n'
@@ -82,3 +81,22 @@ def main(argv=sys.argv):
             gp = GroupPermission(perm_name=perm,
                                  group_id=admins.id)
             dbsession.add(gp)
+
+
+        people = [
+            dict(user_name='horace', email='rumpole@bailey',
+                 name='Horace Rumpole'),
+            dict(user_name='hilda', email='hilda@gloucester.flats',
+                 name='She who Must be Obeyed'),
+            ]
+        for person in people:
+            u = User()
+            for key in person:
+                setattr(u, key, person[key])
+            u.set_password(u.user_name)
+            dbsession.add(u)
+            dbsession.flush()
+            ug = UserGroup(group_id=users.id, user_id=u.id)
+            dbsession.add(ug)
+            dbsession.flush()
+
