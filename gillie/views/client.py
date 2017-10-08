@@ -1,4 +1,3 @@
-from pyramid.renderers import render
 from pyramid.response import Response
 
 from pyramid.httpexceptions import HTTPNotFound
@@ -15,6 +14,7 @@ class MyResource(object):
         self.__name__ = name
         self.__parent__ = parent
 
+        
 class ClientView(BaseUserViewCallable):
     def __init__(self, request):
         super(ClientView, self).__init__(request)

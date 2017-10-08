@@ -1,6 +1,6 @@
 import os
 
-from sqlalchemy.orm.exc import NoResultFound
+from pyramid.renderers import render
 
 
 
