@@ -8,26 +8,13 @@ from pyramid.httpexceptions import HTTPForbidden
 from pyramid.security import remember, forget
 
 from .base import BaseUserViewCallable
-
-from .util import check_login_form
+from .util import make_app_page
 
 class MyResource(object):
     def __init__(self, name, parent=None):
         self.__name__ = name
         self.__parent__ = parent
 
-def make_page(appname, settings, basecolor=None, request=None):
-    template = 'gillie:templates/mainview.mako'
-    if basecolor is None:
-        basecolor = settings.get('default.css.basecolor', 'BlanchedAlmond')
-    csspath = settings.get('default.css.path', '/assets/stylesheets')
-    jspath = settings.get('default.js.path', '/assets/client')
-    env = dict(appname=appname,
-               basecolor=basecolor,
-               csspath=csspath,
-               jspath=jspath)
-    return render(template, env, request=request)
-    
 class ClientView(BaseUserViewCallable):
     def __init__(self, request):
         super(ClientView, self).__init__(request)
@@ -52,9 +39,7 @@ class ClientView(BaseUserViewCallable):
             else:
                 raise HTTPNotFound, "no such animal"
         elif view in ['login', 'logout']:
-            if view == 'logout':
-                return self.handle_logout()
-            elif view == 'login':
+            if view == 'login':
                 appname = settings.get('default.js.login_app', 'login')
                 self.get_main(appname=appname)
                 return
@@ -69,37 +54,8 @@ class ClientView(BaseUserViewCallable):
         settings = self.get_app_settings()
         if appname is None:
             appname = settings.get('default.js.mainapp', 'frontdoor')
-        content = make_page(appname, settings, basecolor=basecolor,
+        content = make_app_page(appname, settings, basecolor=basecolor,
                             request=self.request)
         self.response = Response(body=content)
         self.response.encode_content()
-        
-    def handle_login(self, post):
-        if check_login_form(self.request):
-            username = post['username']
-            headers = remember(self.request, username)
-        self.response = HTTPFound('/')
-
-
-    def handle_logout(self):
-        headers = forget(self.request)
-        if 'user' in self.request.session:
-            del self.request.session['user']
-        while self.request.session.keys():
-            key = self.request.session.keys()[0]
-            del  self.request.session[key]
-        location = self.request.route_url('home')
-        self.response = HTTPFound(location=location, headers=headers)
-
-    def handle_post(self):
-        request = self.request
-        view = request.view_name
-        post = request.POST
-        if view == 'login':
-            return self.handle_login(post)
-        elif view == 'logout':
-            return self.handle_logout()
-        else:
-            raise HTTPNotFound, 'nope'
-        
         
