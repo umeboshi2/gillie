@@ -23,7 +23,9 @@ from .meta import Base
 
 # Base is sqlalchemy's Base = declarative_base() from your project
 class Group(GroupMixin, Base):
-    pass
+    __possible_permissions__ = (
+        'root_administration', 'admin_panel', 'admin_users', 'admin_groups',
+        'admin_entries')
 
 class GroupPermission(GroupPermissionMixin, Base):
     pass
@@ -57,9 +59,21 @@ class UserResourcePermission(UserResourcePermissionMixin, Base):
     pass
 
 class User(UserMixin, Base):
+    __possible_permissions__ = ['root_administration', 'admin_panel',
+                                'admin_users', 'admin_groups', 'admin_entries']
     # ... your own properties....
     name = sa.Column(sa.UnicodeText())
 
+    def get_dict(self, exclude_keys=None, include_keys=None,
+                 permission_info=False):
+        if exclude_keys is None:
+            exclude_keys = ['user_password', 'security_code',
+                            'security_code_date']
+
+        user_dict = super(User, self).get_dict(exclude_keys=exclude_keys,
+                                               include_keys=include_keys)
+        return user_dict
+    
 class ExternalIdentity(ExternalIdentityMixin, Base):
     pass
 
@@ -73,6 +87,11 @@ class Entry(Resource):
 
     __tablename__ = 'entries'
     __mapper_args__ = {'polymorphic_identity': 'entry'}
+
+    __possible_permissions__ = ['view', 'edit']
+
+    # handy for generic redirections based on type
+    plural_type = 'entries'
 
     resource_id = sa.Column(sa.Integer(),
                             sa.ForeignKey('resources.resource_id',
