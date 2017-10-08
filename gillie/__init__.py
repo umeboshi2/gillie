@@ -22,7 +22,7 @@ def main(global_config, **settings):
     authz_policy = ACLAuthorizationPolicy()
     config.set_authorization_policy(authz_policy)
 
-    scan_views = ['notfound', 'sitecontent', 'userauth']
+    scan_views = ['notfound', 'sitecontent', 'userauth', 'todos']
     for view in scan_views:
         config.scan('.views.%s' % view)
     client_view = '.views.client.ClientView'
