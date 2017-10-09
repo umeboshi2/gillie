@@ -5,6 +5,7 @@ Controller = require './controller'
 
 
 MainChannel = Backbone.Radio.channel 'global'
+MessageChannel = Backbone.Radio.channel 'messages'
 
 class Router extends Marionette.AppRouter
   appRoutes:
@@ -13,6 +14,12 @@ class Router extends Marionette.AppRouter
     'adminpanel/view': 'frontdoor'
     'adminpanel/login': 'show_login'
     'adminpanel/logout': 'show_logout'
+  before: ->
+    user = MainChannel.request 'main:app:decode-auth-token'
+    if user
+      if 'admins' not in user.groups
+        MessageChannel.request 'danger', 'Admin access only!'
+        return false
     
 class Applet extends TkApplet
   Controller: Controller

@@ -1,5 +1,6 @@
 $= require 'jquery'
 Backbone = require 'backbone'
+require 'backbone.routefilter'
 Marionette = require 'backbone.marionette'
 require 'bootstrap'
 

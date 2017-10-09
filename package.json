@@ -61,6 +61,7 @@
   "dependencies": {
     "applet-bumblr": "github:umeboshi2/applet-bumblr",
     "backbone.paginator": "^2.0.6",
+    "backbone.routefilter": "^1.0.0",
     "bootstrap": "^3.3.7",
     "bootstrap-fileinput": "^4.4.5",
     "dateformat": "^3.0.2",
