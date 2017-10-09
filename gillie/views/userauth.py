@@ -12,7 +12,9 @@ from ..models.uzig import User
 def authenticate(request, login, password):
     users = UserService()
     user = users.by_user_name(login, db_session=request.dbsession)
-    return user
+    if users.check_password(user, password):
+        return user
+
 
 def make_token(request, user):
     groups = [g.group_name for g in user.groups]
@@ -35,9 +37,8 @@ def login(request):
 
 def refresh(request):
     if request.authenticated_userid:
-        user = request.user
         return dict(result='ok',
-                    token=make_token(request, user),
+                    token=make_token(request, request.user)
         )
     else:
         raise exc.HTTPUnauthorized()
