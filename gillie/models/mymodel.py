@@ -17,6 +17,22 @@ from .meta import Base
 from .util import SerialBase
 from .uzig import Resource
 
+permission_names = """
+view
+edit
+root_administration
+admin_panel
+admin_entries
+admin_users
+admin_groups
+owner
+authenticated
+
+ANY_PERMISSION
+NO_PERMISSION_REQUIRED
+
+"""
+
 class Todo(Resource, SerialBase):
     __tablename__ = 'todos'
     __mapper_args__ = {'polymorphic_identity': 'todo'}
@@ -75,3 +91,12 @@ class SiteDocument(Base, SerialBase):
     created = Column(DateTime, default=func.now())
     modified = Column(DateTime, default=func.now())
 
+class WikiPage(Base, SerialBase):
+    __tablename__ = 'wikipages'
+    id = Column(Integer, primary_key=True)
+    name = Column(Unicode, unique=True)
+    title = Column(Unicode(500))
+    description = Column(Unicode(500))
+    content = Column(UnicodeText)
+    created = Column(DateTime, default=func.now())
+    modified = Column(DateTime, default=func.now())    

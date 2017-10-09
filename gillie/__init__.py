@@ -33,6 +33,7 @@ def main(global_config, **settings):
     #config.add_view(client_view, route_name='home')
     #config.add_view(client_view, route_name='apps')
     config.scan('.views.client')
+    config.scan('.views.wikipages')
     
     lview = '.views.userauth.login'
     config.add_route('login', '/login')

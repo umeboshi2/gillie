@@ -46,6 +46,6 @@ class BaseResource(BaseView):
         q = q.offset(offset).limit(limit)
         objects = q.all()
         data = [self.serialize_object_for_collection_query(o) for o in objects]
-        return dict(total_count=total_count, data=data)
+        return dict(total_count=total_count, items=data)
     
 

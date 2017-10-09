@@ -30,6 +30,9 @@ requires = [
     'ziggurat_foundations',
     'bcrypt',
     'wsgiprox',
+    'mechanize',
+    'beautifulsoup4',
+    'lxml',
 ]
 
 tests_require = [

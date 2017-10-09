@@ -38,6 +38,11 @@ misc_menu =
   ]
 
 config.navbarEntries = [
+  {
+    label: 'wikipages'
+    url: '#wikipages'
+    needUser: true
+  }
   misc_menu
   ]
 

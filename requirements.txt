@@ -19,4 +19,7 @@ pyramid_jwt
 ziggurat_foundations
 bcrypt
 wsgiprox
+mechanize
+beautifulsoup4
+lxml
 ./
