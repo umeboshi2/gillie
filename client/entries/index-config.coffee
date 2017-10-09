@@ -12,6 +12,7 @@ config.authToken.refreshInterval = '5m'
 if __DEV__ and false
   config.authToken.refreshInterval = '10s'
 config.authToken.refreshIntervalMultiple = 3
+config.authToken.loginUrl = '#frontdoor/login'
 
 misc_menu =
   label: 'Misc Applets'
