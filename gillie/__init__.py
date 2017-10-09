@@ -28,9 +28,12 @@ def main(global_config, **settings):
     client_view = '.views.client.ClientView'
     config.add_route('home', '/')
     config.add_route('apps', '/app/{appname}')
-    config.add_view(client_view, route_name='home')
-    config.add_view(client_view, route_name='apps')
-
+    config.add_route('admin', '/admin')
+    
+    #config.add_view(client_view, route_name='home')
+    #config.add_view(client_view, route_name='apps')
+    config.scan('.views.client')
+    
     lview = '.views.userauth.login'
     config.add_route('login', '/login')
     config.add_view(lview, route_name='login', request_method='POST',

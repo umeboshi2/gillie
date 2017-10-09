@@ -37,7 +37,7 @@ def main(argv=sys.argv):
     settings = get_appsettings(config_uri, options=options)
 
     engine = get_engine(settings)
-    Base.metadata.create_all(engine)
+    #Base.metadata.create_all(engine)
 
     session_factory = get_session_factory(engine)
 
@@ -49,7 +49,9 @@ def main(argv=sys.argv):
 
 
         admins = Group(group_name="admins")
+        group_permission = GroupPermission(perm_name='root_administration')
         dbsession.add(admins)
+        admins.permissions.append(group_permission)
         dbsession.flush()
 
         users = Group(group_name="users")
@@ -69,12 +71,8 @@ def main(argv=sys.argv):
         dbsession.flush()
         admin.set_password('admin')
         admin.regenerate_security_code()
+        admins.users.append(admin)
         dbsession.flush()
-
-        for grp in [admins, users]:
-            ug = UserGroup(group_id=grp.id, user_id=admin.id)
-            dbsession.add(ug)
-
 
         ADMIN_PERMISSIONS = ['read', 'edit', 'create', 'delete']
         for perm in ADMIN_PERMISSIONS:

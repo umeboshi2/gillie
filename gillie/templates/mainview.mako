@@ -14,7 +14,8 @@
     <link href="https://fonts.googleapis.com/css?family=Rambla" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Play" rel="stylesheet" type="text/css">
     <script type="text/javascript" charset="utf-8" src="${req.webpack().get_bundle('vendor')[0]['url']}"></script>
-    <script type="text/javascript" charset="utf-8" src="${req.webpack().get_bundle('index')[0]['url']}"></script>
+    <script type="text/javascript" charset="utf-8" src="${req.webpack().get_bundle('common')[0]['url']}"></script>
+    <script type="text/javascript" charset="utf-8" src="${req.webpack().get_bundle(appname)[0]['url']}"></script>
   </head>
   <body>
   </body>

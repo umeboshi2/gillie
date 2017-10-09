@@ -81,12 +81,13 @@ class AuthRefresh extends AuthModel
 MainChannel.reply 'main:app:AuthRefresh', ->
   AuthRefresh
 
-MainChannel.reply 'main:app:refresh-token', ->
+MainChannel.reply 'main:app:refresh-token', (loginUrl) ->
+  loginUrl = loginUrl or "#frontdoor/login"
   refresh = new AuthRefresh
   response = refresh.fetch()
   response.fail ->
     if response.status == 401
-      window.location.hash = "#frontdoor/login"
+      window.location.hash = loginUrl
     else
       msg = 'There was a problem refreshing the access token'
       MessageChannel.request 'warning', msg
