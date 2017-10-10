@@ -69,6 +69,7 @@
     "jquery-ui": "^1.12.1",
     "jquery.json-viewer": "^1.1.0",
     "jwt-decode": "^2.2.0",
+    "keycode": "^2.1.9",
     "leaflet": "^1.2.0",
     "lovefield": "^2.1.12",
     "qs": "^6.5.1",
