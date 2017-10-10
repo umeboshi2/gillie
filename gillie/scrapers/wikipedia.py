@@ -38,6 +38,7 @@ def cleanup_wiki_page(content):
                     if ext in ['jpg', 'gif', 'png', 'jpeg']:
                         continue
                 # FIXME - do something with this!
+                anchor['data-orig-href'] = anchor['href']
                 anchor['href'] = '#wikipages/view/%s' % name
     return soup
     

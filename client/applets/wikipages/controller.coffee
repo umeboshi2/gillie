@@ -44,6 +44,7 @@ class Controller extends MainController
       response = model.fetch()
       response.done =>
         @_show_view vclass, model
+        scroll_top_fast()
       response.fail ->
         msg = "Failed to load #{objname} data."
         MessageChannel.request 'danger', msg
@@ -65,7 +66,7 @@ class Controller extends MainController
           console.warn "collection length is", @collection.length
           MessageChannel.request "warning", "adding initial page"
           model = new Backbone.Model
-          model.url = '/api/dev/bapi/main/wikipages/Quercus'
+          model.url = '/api/dev/bapi/main/wikipages/X32_ABI'
           console.log "MODEL", model
           qr = model.fetch()
           qr.done =>
