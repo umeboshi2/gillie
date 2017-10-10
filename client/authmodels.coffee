@@ -49,8 +49,9 @@ class BasicPageableCollection extends PageableCollection
   parse: (response) ->
     # FIXME it seems we have to set
     # totalPages and lastPage each time
-    @state.totalRecords = response.total
-    @state.totalPages = Math.ceil response.total / @state.pageSize
+    total = response.total_count
+    @state.totalRecords = total
+    @state.totalPages = Math.ceil total / @state.pageSize
     # we start at page zero
     @state.lastPage = @state.totalPages - 1
     super response.items

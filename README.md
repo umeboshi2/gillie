@@ -47,6 +47,7 @@ oc new-app python:2.7~https://github.com/umeboshi2/gillie.git
 
 * Don't perform initial /auth/refresh if no token exists.
 
+* pagination
 
 ### Working with Alembic and ziggarut_foundations
 

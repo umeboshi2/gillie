@@ -60,6 +60,7 @@ class WikiPageView(BaseResource):
         self.mgr = WikiPageManager(self.db)
         self.wikicollector = WikiCollector()
         self.limit = 25
+        self._use_pagination = True
 
     def collection_query(self):
         return self.mgr.query()
