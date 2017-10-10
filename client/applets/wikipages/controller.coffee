@@ -59,15 +59,11 @@ class Controller extends MainController
         collection: @collection
       response = @collection.fetch()
       response.done =>
-        console.log @collection
-        console.log "SHOWING VIEW", @layout, view
         @layout.showChildView 'content', view
         if not @collection.length
-          console.warn "collection length is", @collection.length
           MessageChannel.request "warning", "adding initial page"
           model = new Backbone.Model
           model.url = '/api/dev/bapi/main/wikipages/X32_ABI'
-          console.log "MODEL", model
           qr = model.fetch()
           qr.done =>
             window.location.hash = '#'
