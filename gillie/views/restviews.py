@@ -29,7 +29,7 @@ class BaseResource(BaseView):
     def collection_query(self):
         raise RuntimeError, "Implement me in subclass"
 
-    def collection_get(self):
+    def _apply_pagination(self, query):
         offset = 0
         limit = self.limit
         GET = self.request.GET
@@ -39,11 +39,13 @@ class BaseResource(BaseView):
             limit = int(GET['limit'])
             if limit > self.max_limit:
                 limit = self.max_limit
+        return query.offset(offset).limit(limit)
+    
+    def collection_get(self):
         q = self.collection_query()
-        #qq = q
-        #import pdb ; pdb.set_trace()
         total_count = q.count()
-        q = q.offset(offset).limit(limit)
+        if self._use_pagination:
+            q = self._apply_pagination(q)
         objects = q.all()
         data = [self.serialize_object_for_collection_query(o) for o in objects]
         return dict(total_count=total_count, items=data)
