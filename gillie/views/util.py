@@ -4,7 +4,8 @@ from pyramid.renderers import render
 
 
 
-#@resource(**make_resource(path, ident='name'))
+# for cornice
+# @resource(**make_resource(path, ident='name'))
 def make_resource(rpath, ident='id', cross_site=True):
     path = os.path.join(rpath, '{%s}' % ident)
     data = dict(collection_path=rpath, path=path)
@@ -24,3 +25,15 @@ def make_app_page(appname, settings, basecolor=None, request=None):
                jspath=jspath)
     return render(template, env, request=request)
     
+def apply_pagination(request, query):
+    GET = request.GET
+    if 'offset' in GET:
+        offset = int(GET.get('offset'))
+        query = query.offset(offset)
+    if 'limit' in GET:
+        limit = int(GET.get('limit'))
+        query = query.limit(limit)
+    return query
+
+
+
