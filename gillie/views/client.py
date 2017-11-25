@@ -49,7 +49,7 @@ class ClientView(BaseUserViewCallable):
     @view_config(route_name='admin')
     def admin(self):
         appname = self.settings.get('default.js.admin_app', 'admin')
-        print "APPNAME", appname
+        print("APPNAME", appname)
         self.data = self._make_env(appname)
         return self._make_env(appname)
         
@@ -72,13 +72,13 @@ class ClientView(BaseUserViewCallable):
                 self.get_main(appname=request.matchdict['appname'])
                 return
             else:
-                raise HTTPNotFound, "no such animal"
+                raise HTTPNotFound("no such animal")
         elif view == 'admin':
             appname = settings.get('default.js.admin_app', 'admin')
             basecolor = settings.get('default.admin.basecolor', 'DarkSeaGreen')
             self.get_main(appname=appname, basecolor=basecolor)
         else:
-            raise HTTPNotFound, 'no way'
+            raise HTTPNotFound('no way')
         
     def get_main(self, appname=None, basecolor=None):
         settings = self.get_app_settings()

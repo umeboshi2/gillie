@@ -1,5 +1,5 @@
 # https://github.com/ergo/testscaffold/blob/master/testscaffold/scripts/migratedb.py
-from __future__ import print_function
+
 
 import os
 import sys

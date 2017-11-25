@@ -27,7 +27,7 @@ class BaseResource(BaseView):
         return self.serialize_object(dbobj)
 
     def collection_query(self):
-        raise RuntimeError, "Implement me in subclass"
+        raise RuntimeError("Implement me in subclass")
 
     def _apply_pagination(self, query):
         offset = 0

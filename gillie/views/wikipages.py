@@ -1,7 +1,7 @@
 import os
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 from datetime import datetime
-from urllib2 import HTTPError
+from urllib.error import HTTPError
 
 from cornice.resource import resource, view
 from pyramid.httpexceptions import HTTPNotFound
@@ -67,21 +67,21 @@ class WikiPageView(BaseResource):
 
     def get(self):
         name = self.request.matchdict['name']
-        print "NAME IS", name
+        print("NAME IS", name)
         p = self.mgr.get_by_name(name)
-        print "P IS", p
+        print("P IS", p)
         if p is None:
             try:
                 data = self.wikicollector.get_wiki_page(name)
-            except HTTPError, e:
+            except HTTPError as e:
                 data = None
-            print "data is", data
+            print("data is", data)
             if data is not None:
                 with transaction.manager:
                     p = WikiPage()
                     p.name = name
                     soup = cleanup_wiki_page(data['content'])
-                    p.content = unicode(soup.body)
+                    p.content = str(soup.body)
                     self.db.add(p)
                 p = self.db.merge(p)
                 return self.serialize_object(p)

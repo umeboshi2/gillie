@@ -30,9 +30,9 @@ def main(global_config, **settings):
     
     pj = pyramid_jsonapi.PyramidJSONAPI(config, mymodel)
     print(pj)
-    print('-'*88)
-    print(dir(pj.endpoint_data))
-    print(pj.endpoint_data)
+    print(('-'*88))
+    print((dir(pj.endpoint_data)))
+    print((pj.endpoint_data))
     ep = pj.endpoint_data.endpoints
     #import pdb ; pdb.set_trace()
     

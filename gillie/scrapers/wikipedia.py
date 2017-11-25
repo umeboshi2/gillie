@@ -1,5 +1,4 @@
 import os
-import urlparse
 
 import mechanize
 from bs4 import BeautifulSoup
@@ -55,7 +54,7 @@ class WikiCollector(BaseCollector):
     def _get_url(self, url):
         data = self.cache.get(url)
         if data is None:
-            print "Retrieving %s" % url
+            print("Retrieving %s" % url)
             self.pagecollector.retrieve_page(url)
             self.cache.save(url, self.pagecollector)
             data = self.cache.get(url)

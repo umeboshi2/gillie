@@ -5,7 +5,7 @@ from ziggurat_foundations.permissions import permission_to_pyramid_acls
 
 class RootFactory(object):
     def __init__(self, request):
-        self.__acl__ = [(Allow, Authenticated, u'view'), ]
+        self.__acl__ = [(Allow, Authenticated, 'view'), ]
         # general page factory - append custom non resource permissions
         # request.user object from cookbook recipie
         if request.user:
