@@ -1,8 +1,17 @@
 import os
+import datetime
+
 from pyramid.config import Configurator
 from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.renderers import JSON
 
 from ziggurat_foundations.models import groupfinder
+import pyramid_jsonapi
+
+from .models import uzig, mymodel
+
+def datetime_adapter(obj, request):
+    return obj.isoformat()
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -14,6 +23,21 @@ def main(global_config, **settings):
     config.include('.models')
     config.include('.routes')
 
+    renderer = JSON()
+    renderer.add_adapter(datetime.date, datetime_adapter)
+    config.add_renderer('json', renderer)
+    
+    
+    pj = pyramid_jsonapi.PyramidJSONAPI(config, mymodel)
+    print(pj)
+    print('-'*88)
+    print(dir(pj.endpoint_data))
+    print(pj.endpoint_data)
+    ep = pj.endpoint_data.endpoints
+    #import pdb ; pdb.set_trace()
+    
+    pj.create_jsonapi()
+    
     # FIXME make tests
     JWT_SECRET = os.environ.get('JWT_SECRET', 'secret')
     config.set_jwt_authentication_policy(JWT_SECRET,
