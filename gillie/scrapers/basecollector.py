@@ -1,4 +1,4 @@
-import mechanize
+import robobrowser
 from bs4 import BeautifulSoup
 
 class BaseCollector(object):
