@@ -19,7 +19,8 @@ pyramid_jwt
 ziggurat_foundations
 bcrypt
 wsgiprox
-mechanize
+robobrowser
 beautifulsoup4
 lxml
+pyramid_jsonapi
 ./
