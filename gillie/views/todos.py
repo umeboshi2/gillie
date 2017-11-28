@@ -10,7 +10,6 @@ from rest_toolkit.abc import (
     DeletableResource
 )
 
-from ..models.uzig import Resource, Entry
 from ..models.mymodel import Todo
 
 APIROOT = '/api/dev/bapi'
@@ -30,7 +29,8 @@ class TodoCollection(object):
 @TodoCollection.GET()
 def list_todos(collection, request):
     user = request.user
-    todos = user.resources.filter_by(resource_type='todo')
+    #todos = user.resources.filter_by(resource_type='todo')
+    todos = request.dbsession.query(Todo)
     return dict(items=list(t.get_dict() for t in todos))
 
 @TodoCollection.POST()
@@ -40,9 +40,7 @@ def add_todo(collection, request):
         todo = Todo()
         todo.name = body['name']
         todo.description = body['description']
-        todo.resource_name = make_resource_name(request, body['name'])
         request.dbsession.add(todo)
-        request.user.resources.append(todo)
     return todo.get_dict()
 
 

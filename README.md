@@ -5,7 +5,7 @@ This repository provides a sample Python web application implemented using the F
 ## Quick Deploy 
 
 ```
-oc new-app python:2.7~https://github.com/umeboshi2/gillie.git
+oc new-app python:3.5~https://github.com/umeboshi2/gillie.git
 ```
 
 
@@ -22,7 +22,7 @@ oc new-app python:2.7~https://github.com/umeboshi2/gillie.git
 
 ### Database 
 
-* learn and setup zigg
+* setup users and groups
 
 * learn and setup alembic
 
@@ -51,6 +51,18 @@ oc new-app python:2.7~https://github.com/umeboshi2/gillie.git
 
 ### Working with Alembic and ziggarut_foundations
 
+**handle ziggarut_foundations much later......**
+
+removed these files:
+
+	- gillie/models/uzig.py
+ 
+	- gillie/root_factory.py
+ 
+also look at https://github.com/ergo/testscaffold/blob/master/testscaffold/scripts/migratedb.py
+
+and also remember these steps:
+
 ```
 # create the initial database
 createdb gillie
@@ -63,6 +75,8 @@ alembic -c development.ini upgrade head
 # populate db
 initialize_gillie_db development.ini 
 ```
+
+
 
 
 ## Old Information

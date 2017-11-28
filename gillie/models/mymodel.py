@@ -15,7 +15,6 @@ from sqlalchemy import (
 
 from .meta import Base
 from .util import SerialBase
-from .uzig import Resource
 
 permission_names = """
 view
@@ -33,18 +32,9 @@ NO_PERMISSION_REQUIRED
 
 """
 
-class Todo(Resource, SerialBase):
+class Todo(Base, SerialBase):
     __tablename__ = 'todos'
-    __mapper_args__ = {'polymorphic_identity': 'todo'}
-    __possible_permissions__ = ['view', 'edit']
-
-    plural_type = 'todos'
-
-
     id = Column(Integer,
-                ForeignKey('resources.resource_id',
-                           onupdate='CASCADE',
-                           ondelete='CASCADE', ),
                 primary_key=True, )
     # ... your own properties....
     name = Column(Text, unique=True)

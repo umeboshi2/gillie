@@ -5,14 +5,27 @@ from pyramid.config import Configurator
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.renderers import JSON
 
-from ziggurat_foundations.models import groupfinder
 import pyramid_jsonapi
 
-from .models import uzig, mymodel
+from .models import mymodel
 
 def datetime_adapter(obj, request):
     return obj.isoformat()
 
+
+def groupfinder(userid, request):
+    """
+    Default groupfinder implementaion for pyramid applications
+
+    :param userid:
+    :param request:
+    :return:
+    """
+    if userid and hasattr(request, 'user') and request.user:
+        groups = ['group:%s' % g.id for g in request.user.groups]
+        return groups
+    return []
+    
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
@@ -24,7 +37,8 @@ def main(global_config, **settings):
     config.include('.routes')
 
     renderer = JSON()
-    renderer.add_adapter(datetime.date, datetime_adapter)
+    #renderer.add_adapter(datetime.date, datetime_adapter)
+    renderer.add_adapter(datetime.date, lambda obj, request: obj.isoformat())
     config.add_renderer('json', renderer)
     
     
@@ -46,7 +60,9 @@ def main(global_config, **settings):
     authz_policy = ACLAuthorizationPolicy()
     config.set_authorization_policy(authz_policy)
 
-    scan_views = ['notfound', 'sitecontent', 'userauth', 'todos']
+    #scan_views = ['notfound', 'sitecontent', 'userauth', 'todos']
+    # FIXME jsonapi has "notfound" view
+    scan_views = ['sitecontent', 'userauth', 'todos']
     for view in scan_views:
         config.scan('.views.%s' % view)
     client_view = '.views.client.ClientView'

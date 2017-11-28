@@ -27,7 +27,6 @@ requires = [
     'rest_toolkit',
     'psycopg2',
     'pyramid_jwt',
-    'ziggurat_foundations',
     'bcrypt',
     'wsgiprox',
     'robobrowser',

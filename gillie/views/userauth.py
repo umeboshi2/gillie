@@ -3,9 +3,6 @@ from pyramid.view import view_config
 import pyramid.httpexceptions as exc
 
 from sqlalchemy.exc import DBAPIError
-from ziggurat_foundations.models.services.user import UserService
-
-from ..models.uzig import User
 
 #{uid: 1, username: "admin", name: "Admin User", iat: 1507158526, exp: 1507162126}
 
