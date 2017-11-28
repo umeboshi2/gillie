@@ -1,5 +1,6 @@
-from datetime import datetime
+from datetime import datetime, date
 
+from sqlalchemy import Column, DateTime, func
 
 # http://stackoverflow.com/questions/4617291/how-do-i-get-a-raw-compiled-sql-query-from-a-sqlalchemy-expression
 from sqlalchemy.sql import compiler
@@ -34,10 +35,18 @@ class SerialBase(object):
                 # ignore column
                 continue
             value = getattr(self, name)
-            if pytype is datetime:
-                value = value.isoformat()
+            if pytype is datetime or pytype is date:
+                if value is not None:
+                    value = value.isoformat()
             data[name] = value
         return data
+
+
+
+class TimeStampMixin(SerialBase):
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now())
+    
     
 
 def getDBSession(request):
