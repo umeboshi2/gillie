@@ -9,10 +9,6 @@ import pyramid_jsonapi
 
 from .models import mymodel
 
-def datetime_adapter(obj, request):
-    return obj.isoformat()
-
-
 def groupfinder(userid, request):
     """
     Default groupfinder implementaion for pyramid applications
@@ -37,18 +33,12 @@ def main(global_config, **settings):
     config.include('.routes')
 
     renderer = JSON()
-    #renderer.add_adapter(datetime.date, datetime_adapter)
     renderer.add_adapter(datetime.date, lambda obj, request: obj.isoformat())
     config.add_renderer('json', renderer)
     
     
     pj = pyramid_jsonapi.PyramidJSONAPI(config, mymodel)
-    print(pj)
-    print(('-'*88))
-    print((dir(pj.endpoint_data)))
-    print((pj.endpoint_data))
     ep = pj.endpoint_data.endpoints
-    #import pdb ; pdb.set_trace()
     
     pj.create_jsonapi()
     
@@ -83,5 +73,6 @@ def main(global_config, **settings):
     config.add_route('auth_refresh', '/auth/refresh')
     config.add_view('.views.userauth.refresh', route_name='auth_refresh',
                     request_method='GET', renderer='json')
-    
+
+    config.set_request_property('.util.get_user', 'user', reify=True)
     return config.make_wsgi_app()
