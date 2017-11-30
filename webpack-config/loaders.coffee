@@ -4,9 +4,6 @@ module.exports =
     {
       test: /\.coffee$/
       loader: 'coffee-loader'
-      options:
-        transpile:
-          presets: ['env']
     }
     {
       test: /\.css$/

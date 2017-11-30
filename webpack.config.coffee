@@ -21,6 +21,9 @@ if process.env.PRODUCTION_BUILD
   Clean = require 'clean-webpack-plugin'
   CompressionPlugin = require 'compression-webpack-plugin'
   ChunkManifestPlugin = require 'chunk-manifest-webpack-plugin'
+  # coffee-loader is always top
+  cl = loaders[0]
+  cl.options = transpile: presets: ['env']
   console.log "==============PRODUCTION BUILD=============="
   
 WebPackOutputFilename =
