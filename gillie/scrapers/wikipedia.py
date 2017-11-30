@@ -1,6 +1,5 @@
 import os
 
-import mechanize
 from bs4 import BeautifulSoup
 
 from .basecollector import BaseCollector

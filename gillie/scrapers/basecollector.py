@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 
 class BaseCollector(object):
     def __init__(self):
-        self.browser = mechanize.Browser()
+        self.browser = robobrowser.RoboBrowser()
         self.url = None
         self.response = None
         self.pageinfo = None
