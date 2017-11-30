@@ -23,7 +23,8 @@ class User(Base, TimeStampMixin):
     username = Column(Unicode(50), unique=True)
     fullname = Column(Unicode(150), unique=True)
     email = Column(Unicode(150), unique=True)
-    active = Column(Boolean, default=True)
+    # https://bitbucket.org/zzzeek/sqlalchemy/issues/3067/naming-convention-exception-for-boolean
+    active = Column(Boolean(name='user_active'), default=True)
     password = Column(Unicode(150))
     
     def __init__(self, username=None):
