@@ -21,9 +21,9 @@ class BaseCollector(object):
         else:
             self.url = url
         self.response = self.browser.open(url)
-        self.info = self.response.info()
-        self.content = self.response.read()
-        self.soup = self._make_soup(self.content)
+        self.info = self.browser.response.headers
+        self.content = self.browser.response.content
+        self.soup = self.browser.parsed
 
     def set_url(self, url):
         self.url = url
