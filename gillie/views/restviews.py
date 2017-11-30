@@ -5,15 +5,14 @@ import transaction
 from cornice.resource import resource, view
 
 
-from .base import BaseView
-
 def apiroot(prefix='/api', version='dev'):
     return os.path.join(prefix, version)
 
 
-class BaseResource(BaseView):
-    def __init__(self, request):
-        super(BaseResource, self).__init__(request)
+class BaseResource(object):
+    def __init__(self, request, context=None):
+        super(BaseResource, self).__init__(request, context=context)
+        self.request = request
         self.db = self.request.dbsession
         self.limit = None
         self.max_limit = 100

@@ -20,11 +20,19 @@ class ClientView(BaseUserViewCallable):
     def __init__(self, request):
         super(ClientView, self).__init__(request)
         self.settings = self.get_app_settings()
-
+        self.data = dict(
+            basecolor=self.settings.get('default.css.basecolor', 'vanilla'),
+            csspath=self.settings.get('default.css.path', '/assets/stylesheets'),
+            jspath=self.settings.get('default.js.path', '/assets/client'),)
+        
+            
+    def _make_response(self, settings, appname):
+        content = make_app_page(appname, settings,
+                            request=self.request)
+        self.response = Response(body=content)
+        self.response.encode_content()
+        
     def _make_env(self, appname):
-        basecolor = self.settings.get('default.css.basecolor', 'vanilla')
-        csspath = self.settings.get('default.css.path', '/assets/stylesheets')
-        jspath = self.settings.get('default.js.path', '/assets/client')
         env = dict(appname=appname,
                    basecolor=basecolor,
                    csspath=csspath,
@@ -32,32 +40,16 @@ class ClientView(BaseUserViewCallable):
         return env
         
 
-    def _make_response(self, settings, appname):
-        content = make_app_page(appname, settings,
-                            request=self.request)
-        self.response = Response(body=content)
-        self.response.encode_content()
-        
     @view_config(route_name='home')
     def index(self):
-        appname = self.settings.get('default.js.mainapp', 'index')
-        #self._make_response(self.settings, appname)
-        self.data = self._make_env(appname)
-        return self._make_env(appname)
+        self.data['appname'] = self.settings.get('default.js.mainapp', 'index')
+        return self.data
         
-    #@view_config(route_name='admin', permission='admin_panel')
     @view_config(route_name='admin')
     def admin(self):
-        appname = self.settings.get('default.js.admin_app', 'admin')
-        print("APPNAME", appname)
-        self.data = self._make_env(appname)
-        return self._make_env(appname)
+        self.data['appname'] = self.settings.get('default.js.admin_app', 'admin')
+        return self.data
         
-        
-    
-        
-        
-
     def handle_get(self):
         request = self.request
         view = request.view_name

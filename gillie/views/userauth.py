@@ -4,20 +4,17 @@ import pyramid.httpexceptions as exc
 
 from sqlalchemy.exc import DBAPIError
 
-#{uid: 1, username: "admin", name: "Admin User", iat: 1507158526, exp: 1507162126}
+from ..models.mymodel import User
+from ..util import password_matches, make_token
 
 def authenticate(request, login, password):
-    users = UserService()
-    user = users.by_user_name(login, db_session=request.dbsession)
-    if users.check_password(user, password):
+    s = request.dbsession
+    q = s.query(User)
+    user = q.filter_by(username=login).first()
+    if user is not None and password_matches(user, password):
         return user
-
-
-def make_token(request, user):
-    groups = [g.group_name for g in user.groups]
-    claims = dict(name=user.name, user_name=user.user_name,
-                  email=user.email, uid=user.id, groups=groups)
-    return request.create_jwt_token(user.id, **claims)
+    else:
+        return None
 
 def login(request):
     login = request.POST['username']

@@ -55,7 +55,7 @@ class WikiPageManager(GetByNameManager):
 @resource(collection_path=wiki_path,
           path=os.path.join(wiki_path, '{name}'))
 class WikiPageView(BaseResource):
-    def __init__(self, request):
+    def __init__(self, request, context=None):
         super(WikiPageView, self).__init__(request)
         self.mgr = WikiPageManager(self.db)
         self.wikicollector = WikiCollector()
