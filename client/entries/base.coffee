@@ -1,7 +1,17 @@
 $= require 'jquery'
+_ = require 'underscore'
 Backbone = require 'backbone'
 require 'backbone.routefilter'
 Marionette = require 'backbone.marionette'
+
+# setup backbone relational and jsonapi
+brjs = require 'backbone-relational-sync-jsonapi'
+brjs.default Backbone, _
+require 'backbone-relational'
+brj = require 'backbone-relational-jsonapi'
+brj.default Backbone, _
+
+
 require 'bootstrap'
 
 if __DEV__
@@ -28,6 +38,7 @@ MainChannel.reply 'main:app:get-pagesize', ->
 require '../authmodels'
 require '../crudcontroller'
 require '../static-documents'
+require '../site-schema'
 
 
 MainChannel.reply 'main:app:switch-theme', (theme) ->
