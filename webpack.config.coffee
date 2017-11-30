@@ -21,7 +21,8 @@ if process.env.PRODUCTION_BUILD
   Clean = require 'clean-webpack-plugin'
   CompressionPlugin = require 'compression-webpack-plugin'
   ChunkManifestPlugin = require 'chunk-manifest-webpack-plugin'
-  # coffee-loader is always top
+  # FIXME this is only needed until uglify can parse es6
+  # coffee-loader is always top 
   cl = loaders[0]
   cl.options = transpile: presets: ['env']
   console.log "==============PRODUCTION BUILD=============="
