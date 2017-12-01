@@ -1,6 +1,8 @@
+import warnings
 from datetime import datetime, date
 
 from sqlalchemy import Column, DateTime, func
+from sqlalchemy import PickleType
 
 # http://stackoverflow.com/questions/4617291/how-do-i-get-a-raw-compiled-sql-query-from-a-sqlalchemy-expression
 from sqlalchemy.sql import compiler
@@ -29,11 +31,16 @@ class SerialBase(object):
             name = column.name
             try:
                 pytype = column.type.python_type
-            except NotImplementedError:
-                #import pdb ; pdb.set_trace()
-                #print "HELLO NOTIMPLEMENTEDERROR", column, column.type
-                # ignore column
-                continue
+            except NotImplementedError as error:
+                if type(column.type) is PickleType:
+                    value = getattr(self, name)
+                    if type(value) not in [dict, list]:
+                        # ignore column
+                        continue
+                else:
+                    msg = "{}({}) Not Implemented.".format(column, column.type)
+                    warnings.warn(msg)
+                    continue
             value = getattr(self, name)
             if pytype is datetime or pytype is date:
                 if value is not None:
