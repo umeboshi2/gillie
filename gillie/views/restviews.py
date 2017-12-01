@@ -97,7 +97,6 @@ class SimpleModelResource(BaseResource):
                 fields.discard('created_at')
                 fields.discard('updated_at')
                 m.updated_at = func.now()
-            import pdb ; pdb.set_trace()
             for field in fields:
                 setattr(m, field, self.request.json[field])
             self.db.add(m)
