@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="pyramid web application">
     <meta name="author" content="Pylons Project">
-    <link rel="shortcut icon" href="{{request.static_url('gillie:static/pyramid-16x16.png')}}">
+    <link rel="shortcut icon" href="/assets/favicon.ico">
     <link rel="stylesheet" type="text/css" href="${csspath}/font-awesome.css"/>
     <link rel="stylesheet" type="text/css" href="${csspath}/bootstrap-${basecolor}.css"/>
     <link href="https://fonts.googleapis.com/css?family=Architects+Daughter" rel="stylesheet" type="text/css">
