@@ -84,11 +84,14 @@ class MyModel(Base, SerialBase):
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)
 
+EBMODELS = {}
+
 class EbcsvConfig(Base, TimeStampMixin):
     __tablename__ = 'ebcsv_configs'
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(100), unique=True)
-    content = Column(UnicodeText)
+    content = Column(PickleType)
+EBMODELS['ebcsvcfg'] = EbcsvConfig
 
 class EbcsvDescription(Base, TimeStampMixin):
     __tablename__ = 'ebcsv_descriptions'
@@ -96,17 +99,20 @@ class EbcsvDescription(Base, TimeStampMixin):
     name = Column(Unicode(100), unique=True)
     title = Column(Unicode(500))
     content = Column(UnicodeText)
+EBMODELS['ebcsvdsc'] = EbcsvDescription
 
 class EbcsvClzComicPage(Base, SerialBase):
     __tablename__ = 'ebcsv_clz_comic_pages'
     id = Column(Integer, primary_key=True)
     url = Column(Unicode(500), unique=True)
     image_src = Column(Unicode(500))
-    
+EBMODELS['ebclzpage'] = EbcsvClzComicPage
+
 class ClzCollectionStatus(Base, SerialBase):
     __tablename__ = 'clz_collection_status'
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(100), unique=True)
+EBMODELS['clzcollectionstatus'] = ClzCollectionStatus
 
 class EbcsvClzComic(Base, TimeStampMixin):
     __tablename__ = 'ebcsv_clz_comics'
@@ -130,6 +136,7 @@ class EbcsvClzComic(Base, TimeStampMixin):
     image_src = Column(Unicode(500), default='UNSET')
     # parsed xml object
     content = Column(UnicodeText)
+EBMODELS['ebclzcomic'] = EbcsvClzComic
 
 class EbComicWorkspace(Base, TimeStampMixin):
     __tablename__ = 'ebcomics_workspace'
@@ -138,6 +145,7 @@ class EbComicWorkspace(Base, TimeStampMixin):
                       ForeignKey('ebcsv_clz_comics.comic_id'),
                       unique=True)
     name = Column(UnicodeText)
+EBMODELS['ebcomicworkspace'] = EbComicWorkspace
 
 class GeneralUpload(Base, TimeStampMixin):
     __tablename__ = 'general_uploads'
