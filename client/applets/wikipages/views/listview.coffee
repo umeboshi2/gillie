@@ -19,16 +19,7 @@ base_item_template = (name, route_name) ->
       tc.span '.edit-button.btn.btn-default.btn-xs', 'Edit'
       tc.text " "
       tc.span ->
-        tc.a href:"##{route_name}/view/#{model.name}", model.name
-        
-      tc.div '.todo-completed.checkbox.pull-right', ->
-        tc.label ->
-          opts =
-            type: 'checkbox'
-          if model.completed
-            opts.checked = ''
-          tc.input '.todo-checkbox', opts
-          tc.text 'done'
+        tc.a href:"##{route_name}/view/#{model.id}", model.name
         
 base_list_template = (model) ->
   tc.div '.listview-header', ->
@@ -41,6 +32,10 @@ base_list_template = (model) ->
 class ItemView extends Views.BaseItemView
   route_name: 'wikipages'
   template: base_item_template 'wikipage', 'wikipages'
+  templateContext: ->
+    console.log 'templateContext', @model
+    return {}
+    
   item_type: 'wikipages'
   ui:
     edit_item: '.edit-button'
