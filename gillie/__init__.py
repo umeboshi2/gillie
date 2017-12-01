@@ -1,6 +1,7 @@
 import os
 import datetime
 
+from paste.deploy.converters import asbool
 from pyramid.config import Configurator
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.renderers import JSON
@@ -36,11 +37,12 @@ def main(global_config, **settings):
     renderer.add_adapter(datetime.date, lambda obj, request: obj.isoformat())
     config.add_renderer('json', renderer)
     
+    use_pj = asbool(settings.get('api.use_pyramid_jsonapi', False))
+    if use_pj:
+        pj = pyramid_jsonapi.PyramidJSONAPI(config, mymodel)
+        ep = pj.endpoint_data.endpoints
     
-    pj = pyramid_jsonapi.PyramidJSONAPI(config, mymodel)
-    ep = pj.endpoint_data.endpoints
-    
-    pj.create_jsonapi()
+        pj.create_jsonapi()
     
     # FIXME make tests
     JWT_SECRET = os.environ.get('JWT_SECRET', 'secret')
@@ -50,29 +52,38 @@ def main(global_config, **settings):
     authz_policy = ACLAuthorizationPolicy()
     config.set_authorization_policy(authz_policy)
 
-    #scan_views = ['notfound', 'sitecontent', 'userauth', 'todos']
-    # FIXME jsonapi has "notfound" view
-    scan_views = ['sitecontent', 'userauth', 'todos']
-    for view in scan_views:
-        config.scan('.views.%s' % view)
-    client_view = '.views.client.ClientView'
+
     config.add_route('home', '/')
     config.add_route('apps', '/app/{appname}')
     config.add_route('admin', '/admin')
     
-    #config.add_view(client_view, route_name='home')
-    #config.add_view(client_view, route_name='apps')
-    config.scan('.views.client')
-    config.scan('.views.wikipages')
-    
-    lview = '.views.userauth.login'
     config.add_route('login', '/login')
-    config.add_view(lview, route_name='login', request_method='POST',
-                    renderer='json')
-
     config.add_route('auth_refresh', '/auth/refresh')
+
+    config.add_view('.views.userauth.login', route_name='login',
+                    request_method='POST', renderer='json')
     config.add_view('.views.userauth.refresh', route_name='auth_refresh',
                     request_method='GET', renderer='json')
 
+    #scan_views = ['notfound', 'sitecontent', 'userauth', 'todos']
+    # FIXME jsonapi has "notfound" view
+    scan_views = ['sitecontent', 'userauth', 'todos',
+                  'client',
+                  'ebcsv',
+                  'wikipages',]
+    if not use_pj:
+        scan_views.append('notfound')
+    for view in scan_views:
+        config.scan('.views.%s' % view)
+
+    
+    #config.add_route('clzcore', '/clzcore/*path')
+    #config.add_view('.views.wikipages.get_clzpage', route_name='clzcore')
+    
     config.set_request_property('.util.get_user', 'user', reify=True)
-    return config.make_wsgi_app()
+    
+    
+    application = config.make_wsgi_app()
+    # add wsgi middleware here
+    
+    return application
