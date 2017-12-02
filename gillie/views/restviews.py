@@ -4,8 +4,7 @@ from datetime import datetime
 from sqlalchemy import func
 import transaction
 from cornice.resource import resource, view
-
-from ..models.util import TimeStampMixin
+from chert.alchemy import TimeStampMixin
 
 def apiroot(prefix='/api', version='dev'):
     return os.path.join(prefix, version)
@@ -74,6 +73,9 @@ class SimpleModelResource(BaseResource):
                 if type(value) is dict:
                     print("value of field {} is dict".format(field))
                 setattr(m, field, value)
+            # FIXME 
+            if hasattr(m, 'user_id'):
+                m.user_id = self.request.user.id
             self.db.add(m)
             self.db.flush()
         return self.serialize_object(m)

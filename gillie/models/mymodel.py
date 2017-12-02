@@ -19,10 +19,9 @@ from sqlalchemy import (
     ForeignKey,
 )
 from sqlalchemy.orm import relationship
+from chert.alchemy import SerialBase, TimeStampMixin
 
 from .meta import Base
-from .util import SerialBase
-from .util import TimeStampMixin
 
 from .usergroup import User
 

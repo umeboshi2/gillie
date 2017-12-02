@@ -6,11 +6,10 @@ from sqlalchemy import Integer, Boolean
 from sqlalchemy import Unicode, UnicodeText
 from sqlalchemy import ForeignKey
 
-
 from sqlalchemy.orm import relationship
+from chert.alchemy import TimeStampMixin
 
 from .meta import Base
-from .util import TimeStampMixin
 
 # imports for populate()
 import transaction

@@ -9,6 +9,8 @@ with open(os.path.join(here, 'CHANGES.txt')) as f:
     CHANGES = f.read()
 
 requires = [
+    'chert',
+    'trumpet',
     'gunicorn',
     'plaster_pastedeploy',
     'pyramid >= 1.9a',
@@ -63,6 +65,10 @@ setup(
         'testing': tests_require,
     },
     install_requires=requires,
+    dependency_links=[
+        'git+https://github.com/umeboshi2/chert.git#egg=chert'
+        'git+https://github.com/umeboshi2/trumpet.git#egg=trumpet'
+    ],
     entry_points={
         'paste.app_factory': [
             'main = gillie:main',

@@ -14,7 +14,7 @@ import transaction
 from .restviews import BaseResource
 from .restviews import SimpleModelResource
 
-from ..models.util import TimeStampMixin
+from chert.alchemy import TimeStampMixin
 
 
 APIROOT = '/api/dev/bapi'
