@@ -13,10 +13,19 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Rambla" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Play" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-6 jumbotron">
+                <h1>Loading ...<i class="fa fa-spinner fa-spin"></i></h1>
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+    </div>
     <script type="text/javascript" charset="utf-8" src="${req.webpack().get_bundle('vendor')[0]['url']}"></script>
     <script type="text/javascript" charset="utf-8" src="${req.webpack().get_bundle('common')[0]['url']}"></script>
     <script type="text/javascript" charset="utf-8" src="${req.webpack().get_bundle(appname)[0]['url']}"></script>
-  </head>
-  <body>
   </body>
 </html>
