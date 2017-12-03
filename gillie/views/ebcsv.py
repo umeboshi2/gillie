@@ -16,7 +16,7 @@ from alchemyjsonschema import NoForeignKeyWalker
 from chert.alchemy import TimeStampMixin
 from trumpet.views.resourceviews import BaseResource, SimpleModelResource
 
-from ..models.mymodel import EBMODELS
+from ..models.ebcsv import EBMODELS
 
 APIROOT = '/api/dev/bapi'
 
