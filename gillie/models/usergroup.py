@@ -8,87 +8,27 @@ from sqlalchemy import ForeignKey
 
 from sqlalchemy.orm import relationship
 from chert.alchemy import TimeStampMixin
+from chert.models.usergroup import UserMixin, GroupMixin, UserGroupMixin
 
 from .meta import Base
 
-# imports for populate()
-import transaction
-from sqlalchemy.exc import IntegrityError
-
-
-class User(Base, TimeStampMixin):
-    __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    username = Column(Unicode(50), unique=True)
-    fullname = Column(Unicode(150), unique=True)
-    email = Column(Unicode(150), unique=True)
-    # https://bitbucket.org/zzzeek/sqlalchemy/issues/3067/naming-convention-exception-for-boolean
-    active = Column(Boolean(name='user_active'), default=True)
-    password = Column(Unicode(150))
+class User(Base, UserMixin):
+    def __init__(self, name=None):
+        self.username = name
     
-    def __init__(self, username=None):
-        self.username = username
-
-    def __repr__(self):
-        return self.username
-
-    def get_groups(self):
-        return [g.name for g in self.groups]
-
-    @property
-    def name(self):
-        return super(Base, self).username
-
-    # working to eventually rename username to name
-    def serialize(self):
-        data = TimeStampMixin.serialize(self)
-        data['name'] = data['username']
-        return data
-    
-    
-class UserConfig(Base, TimeStampMixin):
-    __tablename__ = 'user_config'
-    user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
-    text = Column(UnicodeText)
-
-    def __init__(self, user_id=None, text=None):
-        self.user_id = user_id
-        self.text = text
-
-    def get_config(self):
-        c = ConfigParser()
-        c.readfp(StringIO(self.text))
-        return c
-
-    def set_config(self, config):
-        cfile = StringIO()
-        config.write(cfile)
-        cfile.seek(0)
-        text = cfile.read()
-        self.text = text
-    
-class Group(Base, TimeStampMixin):
-    __tablename__ = 'groups'
-    id = Column(Integer, primary_key=True)
-    name = Column(Unicode(50), unique=True)
-
+class Group(Base, GroupMixin):
     def __init__(self, name=None):
         self.name = name
 
-class UserGroup(Base, TimeStampMixin):
-    __tablename__ = 'group_user'
-    group_id = Column(Integer, ForeignKey('groups.id'), primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
-
+class UserGroup(Base, UserGroupMixin):
     def __init__(self, gid=None, uid=None):
         self.group_id = gid
         self.user_id = uid
 
 
-User.groups = relationship(Group, secondary='group_user')
-User.config = relationship(UserConfig, uselist=False, lazy='subquery')
-Group.users = relationship(User, secondary='group_user')
-
+# imports for populate()
+import transaction
+from sqlalchemy.exc import IntegrityError
 
 
 def populate_groups(session):
@@ -103,7 +43,7 @@ def populate_groups(session):
 
 
 def populate_users(session, admin_username='admin'):
-    from ..util import encrypt_password
+    from trumpet.util import encrypt_password
     with transaction.manager:
         users = [admin_username]
         # Using id_count to presume

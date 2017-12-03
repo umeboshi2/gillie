@@ -56,7 +56,6 @@ class Todo(Base, TimeStampMixin):
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     name = Column(Text, unique=True)
     description = Column(Text)
-    # https://bitbucket.org/zzzeek/sqlalchemy/issues/3067/naming-convention-exception-for-boolean
     completed = Column(Boolean(name='todo_complete'), default=func.false())
 
     
