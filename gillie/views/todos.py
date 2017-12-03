@@ -11,7 +11,7 @@ from pyramid.httpexceptions import HTTPForbidden
 from sqlalchemy.orm.exc import NoResultFound
 import transaction
 
-from .restviews import SimpleModelResource
+from trumpet.views.resourceviews import SimpleModelResource
 
 from chert.alchemy import TimeStampMixin
 

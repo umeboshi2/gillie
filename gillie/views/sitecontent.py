@@ -1,9 +1,10 @@
 import os
 
 from cornice.resource import resource, view
+import transaction
+from trumpet.views.resourceviews import BaseResource, apiroot
 
-from .restviews import BaseResource, apiroot
-from ..managers.sitecontent import SiteDocumentManager
+from ..models.mymodel import SiteDocument
 
 #@resource(**make_resource(path, ident='name'))
 def make_resource(rpath, ident='id', cross_site=True):
@@ -18,44 +19,43 @@ site_documents_api_path = os.path.join(apiroot(), 'sitedocuments')
 class SiteDocumentResource(BaseResource):
     def __init__(self, request):
         super(SiteDocumentResource, self).__init__(request)
-        self.mgr = SiteDocumentManager(request.dbsession)
+
+    def query(self):
+        return self.db.query(SiteDocument)
         
-
     def collection_query(self):
-        return self.mgr.query
+        return self.db.query(SiteDocument)
 
+    def _get(self, name):
+        return self.query().filter_by(name=name).first()
+    
     def get(self):
         name = self.request.matchdict['name']
-        return self.serialize_object(self.mgr.getbyname(name))
+        result = self._get(name)
+        return self.serialize_object(result)
     
     def _insert_or_update(self, name):
-        request = self.request
-        title = request.json['title']
-        description = request.json['description']
-        content = request.json['content']
+        fields = ['title', 'description', 'content']
+        data = dict(((f, self.request.json[f]) for f in fields))
+        data['name'] = name
         # FIXME, don't hardcode markdown
-        doctype = 'markdown'
+        data['doctype'] = 'markdown'
 
-        doc = self.mgr.getbyname(name)
-        args = (name, title, description, content, doctype)
-        if doc is None:
-            doc = self.mgr.add_document(*args)
-        else:
-            doc = self.mgr.update_document(doc, *args)
-        response = dict(data=doc.serialize(), result='success')
-        return response
+        with transaction.manager:
+            doc = self._get(name)
+            for k in data:
+                setattr(doc, k, data[k])
+        return dict(data=doc.serialize(), result='success')
         
     def put(self):
         name = self.request.matchdict['name']
         return self._insert_or_update(name)
     
-        
-    def get(self):
-        name = self.request.matchdict['name']
-        return self.serialize_object(self.mgr.getbyname(name))
-
     def delete(self):
-        name = self.request.matchdict['name']
-        self.mgr.delete_document(name)
+        with transaction.manager:
+            name = self.request.matchdict['name']
+            m = self._get(name)
+            m.delete()
         return dict(result='success')
+            
     

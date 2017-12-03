@@ -4,31 +4,24 @@ from datetime import datetime
 from urllib.error import HTTPError
 
 from cornice.resource import resource, view
-from pyramid.httpexceptions import HTTPNotFound
-from pyramid.httpexceptions import HTTPFound
-from pyramid.httpexceptions import HTTPForbidden
+from pyramid.response import Response
+from pyramid.httpexceptions import HTTPNotFound, HTTPFound, HTTPForbidden
 from bs4 import BeautifulSoup
 from sqlalchemy.orm.exc import NoResultFound
 import transaction
-
-from .restviews import BaseResource
-from .restviews import SimpleModelResource
+import requests
+from alchemyjsonschema import SchemaFactory
+from alchemyjsonschema import NoForeignKeyWalker
 
 from chert.alchemy import TimeStampMixin
+from trumpet.views.resourceviews import BaseResource, SimpleModelResource
 
+from ..models.mymodel import EBMODELS
 
 APIROOT = '/api/dev/bapi'
 
 rscroot = os.path.join(APIROOT, 'main')
 
-from pyramid.view import view_config
-from pyramid.response import Response
-import requests
-
-from alchemyjsonschema import SchemaFactory
-from alchemyjsonschema import NoForeignKeyWalker
-
-from ..models.mymodel import EBMODELS
 
 def get_clzpage(request):
     path = os.path.join(*request.matchdict['path'])

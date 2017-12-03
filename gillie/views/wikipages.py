@@ -11,13 +11,13 @@ from bs4 import BeautifulSoup
 from sqlalchemy.orm.exc import NoResultFound
 import transaction
 
-from .restviews import BaseResource
+from trumpet.views.resourceviews import BaseResource
 
 from ..models.mymodel import WikiPage
 from ..scrapers.wikipedia import WikiCollector, cleanup_wiki_page
 
 
-APIROOT = '/api/dev/bapi'
+APIROOT = '/api/dev/bsapi'
 
 rscroot = os.path.join(APIROOT, 'main')
 
@@ -56,14 +56,20 @@ class WikiPageManager(GetByNameManager):
           path=os.path.join(wiki_path, '{name}'))
 class WikiPageView(BaseResource):
     def __init__(self, request, context=None):
-        super(WikiPageView, self).__init__(request)
+        super(WikiPageView, self).__init__(request, context=context)
         self.mgr = WikiPageManager(self.db)
         self.wikicollector = WikiCollector()
-        self.limit = 25
-        self._use_pagination = True
+        self.limit = 10
 
     def collection_query(self):
-        return self.mgr.query()
+        return self.db.query(WikiPage.id, WikiPage.name, WikiPage.description,
+                             WikiPage.created, WikiPage.updated)
+
+    def serialize_object_for_collection_query(self, dbobj):
+        data = {}
+        for key in dbobj.keys():
+            data[key] = getattr(dbobj, key)
+        return data
 
     def get(self):
         name = self.request.matchdict['name']

@@ -3,9 +3,11 @@ from pyramid.view import view_config
 import pyramid.httpexceptions as exc
 
 from sqlalchemy.exc import DBAPIError
+import transaction
+from trumpet.util import password_matches, encrypt_password
 
 from ..models.mymodel import User
-from ..util import password_matches, make_token
+from ..util import make_token
 
 def authenticate(request, login, password):
     s = request.dbsession
@@ -29,11 +31,22 @@ def login(request):
         raise exc.HTTPUnauthorized()
 
 
+def chpass(request):
+    if request.authenticated_userid:
+        pw = request.json['password']
+        if pw != request.json['confirm']:
+            raise exc.HTTPForbidden()
+        user = request.user
+        with transaction.manager:
+            user.password = encrypt_password(request.json['password'])
+            request.dbsession.add(user)
+        return dict(result='ok',
+                    token=make_token(request, request.user))
+    raise exc.HTTPUnauthorized()
+    
 def refresh(request):
     if request.authenticated_userid:
         return dict(result='ok',
-                    token=make_token(request, request.user)
-        )
-    else:
-        raise exc.HTTPUnauthorized()
+                    token=make_token(request, request.user))
+    raise exc.HTTPUnauthorized()
     
