@@ -63,7 +63,7 @@ class Controller extends MainController
         if not @collection.length
           MessageChannel.request "warning", "adding initial page"
           model = new Backbone.Model
-          model.url = '/api/dev/bapi/main/wikipages/X32_ABI'
+          model.url = '/api/dev/bsapi/main/wikipages/X32_ABI'
           qr = model.fetch()
           qr.done =>
             window.location.hash = '#'

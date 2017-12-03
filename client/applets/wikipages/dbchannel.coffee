@@ -9,7 +9,7 @@ AuthModel = MainChannel.request 'main:app:AuthModel'
 AuthCollection = MainChannel.request 'main:app:AuthCollection'
 
 
-apiroot = "/api/dev/bapi/main"
+apiroot = "/api/dev/bsapi/main"
 url = "#{apiroot}/wikipages"
 
 

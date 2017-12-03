@@ -19,7 +19,7 @@ base_item_template = (name, route_name) ->
       tc.span '.edit-button.btn.btn-default.btn-xs', 'Edit'
       tc.text " "
       tc.span ->
-        tc.a href:"##{route_name}/view/#{model.id}", model.name
+        tc.a href:"##{route_name}/view/#{model.name}", model.name
         
 base_list_template = (model) ->
   tc.div '.listview-header', ->
