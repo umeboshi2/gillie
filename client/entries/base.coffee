@@ -9,8 +9,8 @@ Marionette = require 'backbone.marionette'
 #brjs.default Backbone, _
 
 require 'backbone-relational'
-brj = require 'backbone-relational-jsonapi'
-brj.default Backbone, _
+#brj = require 'backbone-relational-jsonapi'
+#brj.default Backbone, _
 
 
 require 'bootstrap'
