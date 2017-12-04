@@ -39,6 +39,16 @@ misc_menu =
 
 config.navbarEntries = [
   {
+    label: 'hubby'
+    url: '#hubby'
+    needUser: false
+  }
+  {
+    label: 'sofi'
+    url: '#sofi'
+    needUser: false
+  }
+  {
     label: 'wikipages'
     url: '#wikipages'
     needUser: true
