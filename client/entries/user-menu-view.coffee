@@ -54,7 +54,6 @@ class UserMenuApp extends Toolkit.App
   onBeforeStart: ->
     @setRegion @options.parentApp.getView().getRegion 'usermenu'
     token = MainChannel.request "main:app:decode-auth-token"
-    console.log "TOKEN", token
     @options.user = token
     
   onStart: ->
