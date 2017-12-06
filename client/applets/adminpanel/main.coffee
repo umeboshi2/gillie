@@ -17,7 +17,7 @@ class Router extends Marionette.AppRouter
   before: ->
     user = MainChannel.request 'main:app:decode-auth-token'
     if user
-      if 'admins' not in user.groups
+      if 'admin' not in user.groups
         MessageChannel.request 'danger', 'Admin access only!'
         return false
     
