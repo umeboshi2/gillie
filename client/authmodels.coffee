@@ -83,6 +83,8 @@ MainChannel.reply 'main:app:AuthRefresh', ->
   AuthRefresh
 
 MainChannel.reply 'main:app:refresh-token', (loginUrl) ->
+  unless 'auth_token' in Object.keys localStorage
+    return
   loginUrl = loginUrl or "#frontdoor/login"
   refresh = new AuthRefresh
   response = refresh.fetch()
