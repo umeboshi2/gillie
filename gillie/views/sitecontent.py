@@ -3,6 +3,7 @@ import os
 from cornice.resource import resource, view
 import transaction
 from trumpet.views.resourceviews import BaseResource, apiroot
+from trumpet.views.resourceviews import BaseModelResource
 
 from ..models.mymodel import SiteDocument
 
@@ -15,10 +16,14 @@ def make_resource(rpath, ident='id', cross_site=True):
     return data
 
 site_documents_api_path = os.path.join(apiroot(), 'sitedocuments')
-@resource(**make_resource(site_documents_api_path, ident='name'))
-class SiteDocumentResource(BaseResource):
-    def __init__(self, request):
-        super(SiteDocumentResource, self).__init__(request)
+#@resource(**make_resource(site_documents_api_path, ident='name'))
+@resource(**make_resource(site_documents_api_path))
+class SiteDocumentResource(BaseModelResource):
+    model = SiteDocument
+    
+class SiteDocumentResourceOrig(BaseResource):
+    def __init__(self, request, context=None):
+        super(SiteDocumentResource, self).__init__(request, context=context)
 
     def query(self):
         return self.db.query(SiteDocument)
@@ -46,7 +51,7 @@ class SiteDocumentResource(BaseResource):
             for k in data:
                 setattr(doc, k, data[k])
         return dict(data=doc.serialize(), result='success')
-        
+
     def put(self):
         name = self.request.matchdict['name']
         return self._insert_or_update(name)
