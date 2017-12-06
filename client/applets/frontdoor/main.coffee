@@ -27,11 +27,4 @@ class Applet extends TkApplet
     console.log "(Child) Stopping frontdoor", @.isRunning()
     super()
 
-MainChannel.reply 'applet:frontdoor:route', () ->
-  console.warn "Don't use applet:frontdoor:route"
-  controller = new Controller MainChannel
-  router = new Router
-    controller: controller
-    
-      
 module.exports = Applet

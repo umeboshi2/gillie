@@ -21,17 +21,8 @@ class Applet extends TkApplet
 
   onBeforeStart: ->
     super arguments
-    MainChannel.reply 'applet:annex:router', =>
-      @router
-    MainChannel.reply 'applet:annex:controller', =>
-      @router.controller
     AppChannel.reply 'main-controller', =>
       console.warn "Stop using 'main-controller' request on AppChannel"
       @router.controller
 
-MainChannel.reply 'applet:userprofile:route', () ->
-  controller = new Controller MainChannel
-  router = new Router
-    controller: controller
-  
 module.exports = Applet

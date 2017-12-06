@@ -1,17 +1,35 @@
 { MainController } = require 'tbirds/controllers'
+ToolbarView = require 'tbirds/views/button-toolbar'
 
 MainChannel = Backbone.Radio.channel 'global'
 MessageChannel = Backbone.Radio.channel 'messages'
 ResourceChannel = Backbone.Radio.channel 'resources'
+AppChannel = Backbone.Radio.channel 'dbdocs'
 
 { ToolbarAppletLayout } = require 'tbirds/views/layout'
+
+toolbarEntries = [
+  {
+    button: '#list-button'
+    label: 'List'
+    url: '#dbdocs/documents'
+    icon: '.fa.fa-list'
+  }
+  ]
+
+
+toolbarEntryCollection = new Backbone.Collection toolbarEntries
+AppChannel.reply 'get-toolbar-entries', ->
+  toolbarEntryCollection
 
 
 class Controller extends MainController
   layoutClass: ToolbarAppletLayout
   setup_layout_if_needed: ->
     super()
-    #@layout.showChildView 'toolbar', new ToolbarView
+    toolbar = new ToolbarView
+      collection: toolbarEntryCollection
+    @layout.showChildView 'toolbar', toolbar
 
   collection: ResourceChannel.request 'document-collection'
   

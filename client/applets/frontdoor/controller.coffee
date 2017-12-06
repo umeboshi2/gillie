@@ -82,9 +82,9 @@ class Controller extends MainController
       
 
   frontdoor_needuser: ->
-    user = MainChannel.request 'current-user'
-    if user.has 'name'
-      @frontdoor_hasuser user
+    token = MainChannel.request 'main:app:decode-auth-token'
+    if 'name' in Object.keys token
+      @frontdoor_hasuser token
     else
       @show_login()
       

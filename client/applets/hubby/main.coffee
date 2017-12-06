@@ -41,19 +41,4 @@ HubChannel.reply 'maincalendar:set-date', () ->
 HubChannel.reply 'maincalendar:get-date', () ->
   current_calendar_date
   
-MainChannel.reply 'applet:hubby:route', () ->
-  console.warn "Don't use applet:hubby:route"
-  controller = new Controller MainChannel
-  HubChannel.reply 'main-controller', ->
-    controller
-  HubChannel.reply 'view-calendar', (layout, region) ->
-    controller.show_calendar layout, region
-  HubChannel.reply 'view-meeting', (layout, region, id) ->
-    controller.show_meeting layout, region, id
-  HubChannel.reply 'view-items', (layout, region, options) ->
-    controller.list_items layout, region, options
-  router = new Router
-    controller: controller
-
-    
 module.exports = Applet

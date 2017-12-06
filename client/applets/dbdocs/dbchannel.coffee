@@ -5,8 +5,7 @@ Backbone = require 'backbone'
 MainChannel = Backbone.Radio.channel 'global'
 ResourceChannel = Backbone.Radio.channel 'resources'
 
-apipath = "/api/dev/booky/DbDoc"
-
+apipath = "/api/dev/sitedocuments"
 
 AuthModel = MainChannel.request 'main:app:AuthModel'
 AuthCollection = MainChannel.request 'main:app:AuthCollection'

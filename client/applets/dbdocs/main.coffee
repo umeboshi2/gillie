@@ -21,11 +21,4 @@ class Applet extends TkApplet
   Controller: Controller
   Router: Router
 
-  onBeforeStart: ->
-    super arguments
-    MainChannel.reply 'applet:dbdocs:router', =>
-      @router
-    MainChannel.reply 'applet:dbdocs:controller', =>
-      @router.controller
-
 module.exports = Applet
