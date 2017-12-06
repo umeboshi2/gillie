@@ -19,7 +19,17 @@ from sqlalchemy import (
     ForeignKey,
 )
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declared_attr
 from chert.alchemy import SerialBase, TimeStampMixin
+from chert.models.base import BaseLongNameIdMixin
+from chert.models.documents import SiteDocumentMixin
+
+from chert.models.blog import (
+    PersonMixin,
+    BlogMixin,
+    PostMixin,
+    CommentMixin,
+)
 
 from .meta import Base
 
@@ -61,17 +71,8 @@ class Todo(Base, TimeStampMixin):
     
 Todo.user = relationship(User, uselist=False, lazy='subquery')
 
-DocType = Enum('markdown', 'html',
-               name='site_document_type_enum')
-
-class SiteDocument(Base, TimeStampMixin):
-    __tablename__ = 'site_documents'
-    id = Column(Integer, primary_key=True)
-    name = Column(Unicode(100), unique=True)
-    title = Column(Unicode(500))
-    description = Column(Unicode(500))
-    doctype = Column(DocType, default='markdown')
-    content = Column(UnicodeText)
+class SiteDocument(Base, SiteDocumentMixin):
+    pass
 
 class MyModel(Base, SerialBase):
     __tablename__ = 'models'
@@ -81,4 +82,16 @@ class MyModel(Base, SerialBase):
 
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)
+
+class Person(Base, PersonMixin):
+    pass
+
+class Blog(Base, BlogMixin):
+    pass
+
+class Post(Base, PostMixin):
+    pass
+
+class Comment(Base, CommentMixin):
+    pass
 
