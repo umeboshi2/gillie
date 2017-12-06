@@ -15,7 +15,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from chert.alchemy import SerialBase, TimeStampMixin
 from hubby.legistar import legistar_host
 
-from .meta import Base
+Base = declarative_base()
 
 ####################################
 ## Data Types                     ##
@@ -46,20 +46,17 @@ CacheType = Enum('action', 'departments', 'item', 'meeting',
 ## Tables                         ##
 ####################################
 
-class MainCache(Base, TimeStampMixin):
+class MainCache(Base, SerialBase):
     __tablename__ = 'lgr_main_cache'
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(200), unique=True)
     retrieved = Column(DateTime)
+    updated = Column(DateTime)
     content = Column(PickleType)
 
-    @property
-    def updated(self):
-        return super(Base, self).updated_at
 
 
-
-class Department(Base, TimeStampMixin):
+class Department(Base, SerialBase):
     __tablename__ = 'lgr_departments'
     id = Column(Integer, primary_key=True)
     guid = Column(String)
@@ -74,7 +71,7 @@ class Department(Base, TimeStampMixin):
         return '<Dept: %d - %s>' % (self.id, self.name)
 
 
-class Person(Base, TimeStampMixin):
+class Person(Base, SerialBase):
     __tablename__ = 'lgr_people'
 
     id = Column(Integer, primary_key=True)
@@ -99,7 +96,7 @@ class Person(Base, TimeStampMixin):
         return msg  % (self.id, self.firstname, self.lastname)
     
 
-class Meeting(Base, TimeStampMixin):
+class Meeting(Base, SerialBase):
     __tablename__ = 'lgr_meetings'
 
     id = Column(Integer, primary_key=True)
@@ -133,7 +130,7 @@ class Meeting(Base, TimeStampMixin):
         return "<Meeting(%d): '%s'>" % (self.id, self.title)
     
 
-class Item(Base, TimeStampMixin):
+class Item(Base, SerialBase):
     __tablename__ = 'lgr_items'
 
     id = Column(Integer, primary_key=True)
@@ -204,7 +201,7 @@ class MeetingItem(Base, SerialBase):
         return "<MeetingItem %d:%d>" % (self.meeting_id, self.item_id)
     
     
-class Action(Base, TimeStampMixin):
+class Action(Base, SerialBase):
     __tablename__ = 'lgr_actions'
 
     id = Column(Integer, primary_key=True)
@@ -363,7 +360,7 @@ class Attachment(Base, SerialBase):
         return "<Attachment:  id: %d>" % self.id
 
     def get_link(self):
-        return 'http://%s/%s' % (legistar_host, self.link)
+        return 'https://%s/%s' % (legistar_host, self.link)
     
 
 class Tag(Base, SerialBase):
