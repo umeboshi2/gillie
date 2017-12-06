@@ -82,6 +82,17 @@ class AuthRefresh extends AuthModel
 MainChannel.reply 'main:app:AuthRefresh', ->
   AuthRefresh
 
+MainChannel.reply 'main:app:set-auth-token', (token) ->
+  localStorage.setItem 'auth_token', token
+
+MainChannel.reply 'main:app:decode-auth-token', ->
+  token = localStorage.getItem 'auth_token'
+  if token
+    jwtDecode token
+  else
+    {}
+
+
 MainChannel.reply 'main:app:refresh-token', (loginUrl) ->
   unless 'auth_token' in Object.keys localStorage
     return
@@ -98,16 +109,6 @@ MainChannel.reply 'main:app:refresh-token', (loginUrl) ->
     token = refresh.get 'token'
     decoded = jwtDecode token
     localStorage.setItem 'auth_token', token
-
-MainChannel.reply 'main:app:set-auth-token', (token) ->
-  localStorage.setItem 'auth_token', token
-
-MainChannel.reply 'main:app:decode-auth-token', ->
-  token = localStorage.getItem 'auth_token'
-  if token
-    jwtDecode token
-  else
-    {}
 
 MainChannel.reply 'current-user', ->
   if __DEV__

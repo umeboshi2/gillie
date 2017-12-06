@@ -4,6 +4,7 @@ tc = require 'teacup'
 jwtDecode = require 'jwt-decode'
 ms = require 'ms'
 
+objectEmpty = require '../object-empty'
 
 
 MainChannel = Backbone.Radio.channel 'global'
@@ -14,20 +15,15 @@ ms_remaining = (token) ->
   exp = new Date(token.exp * 1000)
   return exp - now
 
-# https://stackoverflow.com/a/32108184
-token_missing = (token) ->
-  (Object.keys(token).length == 0 && token.constructor == Object)
-  
 access_time_remaining = ->
   token = MainChannel.request 'main:app:decode-auth-token'
-  if token_missing token
+  if objectEmpty token
     return 0
   remaining = ms_remaining token
   return Math.floor(remaining / 1000)
-  
-keep_token_fresh = (options) ->
+
+token_needs_refresh = (token, options) ->
   options = options or {}
-  token = MainChannel.request 'main:app:decode-auth-token'
   remaining = ms_remaining token
   interval = ms '5m'
   if 'refreshInterval' in Object.keys options
@@ -35,26 +31,34 @@ keep_token_fresh = (options) ->
   multiple = options.refreshIntervalMultiple or 3
   access_period = 1000 * (token.exp - token.iat)
   refresh_when = access_period - (multiple * interval)
-  if remaining < refresh_when
+  return remaining < refresh_when
+  
+  
+keep_token_fresh = (options) ->
+  options = options or {}
+  token = MainChannel.request 'main:app:decode-auth-token'
+  if token_needs_refresh token, options
     MainChannel.request 'main:app:refresh-token', options.loginUrl
-    
+
+  
 
 
   
 init_token = ->
   remaining = access_time_remaining()
   token = MainChannel.request 'main:app:decode-auth-token'
-  if remaining <= 0 and not token_missing token
+  if remaining <= 0 and not objectEmpty token
     MessageChannel.request 'warning', 'deleting expired access token'
     MainChannel.request 'main:app:destroy-auth-token'
   token
+  
 start_user_app = (app, appConfig) ->
   token = init_token()
-  if token_missing token
+  if objectEmpty token
     app.start
       state:
         currentUser: null
-  else
+  else if token_needs_refresh token, appConfig.authToken
     AuthRefresh = MainChannel.request 'main:app:AuthRefresh'
     refresh = new AuthRefresh
     response = refresh.fetch()
@@ -74,7 +78,13 @@ start_user_app = (app, appConfig) ->
       app.start
         state:
           currentUser: MainChannel.request 'main:app:decode-auth-token'
-        
+  else
+    # start the app
+    app.start
+      state:
+        currentUser: token
+      
+       
   
 module.exports =
   access_time_remaining: access_time_remaining
