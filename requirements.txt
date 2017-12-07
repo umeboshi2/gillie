@@ -1,5 +1,5 @@
-git+https://github.com/umeboshi2/chert.git#egg=chert
-git+https://github.com/umeboshi2/trumpet.git#egg=trumpet
+hornstone
+trumpet
 gunicorn
 plaster_pastedeploy
 pyramid
