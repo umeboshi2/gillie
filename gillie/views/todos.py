@@ -13,7 +13,7 @@ import transaction
 
 from trumpet.views.resourceviews import SimpleModelResource
 
-from chert.alchemy import TimeStampMixin
+from hornstone.alchemy import TimeStampMixin
 
 
 APIROOT = '/api/dev/bapi'

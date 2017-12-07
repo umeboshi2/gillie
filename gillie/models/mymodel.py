@@ -1,30 +1,21 @@
-from configparser import ConfigParser
-from io import StringIO
-
 from sqlalchemy import (
     Column,
     Index,
     Integer,
-    BigInteger,
-    Float,
     Text,
     Unicode,
     UnicodeText,
-    Date,
     DateTime,
     PickleType,
     Boolean,
-    Enum,
     func,
     ForeignKey,
 )
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declared_attr
-from chert.alchemy import SerialBase, TimeStampMixin
-from chert.models.base import BaseLongNameIdMixin
-from chert.models.documents import SiteDocumentMixin
+from hornstone.alchemy import SerialBase, TimeStampMixin
+from hornstone.models.documents import SiteDocumentMixin
 
-from chert.models.blog import (
+from hornstone.models.blog import (
     PersonMixin,
     BlogMixin,
     PostMixin,
@@ -51,14 +42,16 @@ NO_PERMISSION_REQUIRED
 
 """
 
+
 class WikiPage(Base, TimeStampMixin):
     __tablename__ = 'wikipages'
     id = Column(Integer, primary_key=True)
     name = Column(Unicode, unique=True)
-    title = Column(Unicode(500))
-    description = Column(Unicode(500))
+    headers = Column(PickleType)
+    updated_upstream = Column(DateTime)
     content = Column(UnicodeText)
     original = Column(UnicodeText)
+
 
 class Todo(Base, TimeStampMixin):
     __tablename__ = 'todos'
@@ -68,11 +61,12 @@ class Todo(Base, TimeStampMixin):
     description = Column(Text)
     completed = Column(Boolean(name='todo_complete'), default=func.false())
 
-    
 Todo.user = relationship(User, uselist=False, lazy='subquery')
+
 
 class SiteDocument(Base, SiteDocumentMixin):
     pass
+
 
 class MyModel(Base, SerialBase):
     __tablename__ = 'models'
@@ -83,15 +77,18 @@ class MyModel(Base, SerialBase):
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)
 
+
 class Person(Base, PersonMixin):
     pass
+
 
 class Blog(Base, BlogMixin):
     pass
 
+
 class Post(Base, PostMixin):
     pass
 
+
 class Comment(Base, CommentMixin):
     pass
-

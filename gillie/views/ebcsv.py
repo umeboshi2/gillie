@@ -13,7 +13,7 @@ import requests
 from alchemyjsonschema import SchemaFactory
 from alchemyjsonschema import NoForeignKeyWalker
 
-from chert.alchemy import TimeStampMixin
+from hornstone.alchemy import TimeStampMixin
 from trumpet.views.resourceviews import BaseResource, SimpleModelResource
 
 from ..models.ebcsv import EBMODELS

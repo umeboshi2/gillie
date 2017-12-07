@@ -7,8 +7,8 @@ from sqlalchemy import Unicode, UnicodeText
 from sqlalchemy import ForeignKey
 
 from sqlalchemy.orm import relationship
-from chert.alchemy import TimeStampMixin
-from chert.models.usergroup import UserMixin, GroupMixin, UserGroupMixin
+from hornstone.alchemy import TimeStampMixin
+from hornstone.models.usergroup import UserMixin, GroupMixin, UserGroupMixin
 
 from .meta import Base
 

@@ -19,7 +19,7 @@ from sqlalchemy import (
     ForeignKey,
 )
 from sqlalchemy.orm import relationship
-from chert.alchemy import SerialBase, TimeStampMixin
+from hornstone.alchemy import SerialBase, TimeStampMixin
 
 from .meta import Base
 

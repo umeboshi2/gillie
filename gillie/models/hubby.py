@@ -12,7 +12,7 @@ from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
-from chert.alchemy import SerialBase, TimeStampMixin
+from hornstone.alchemy import SerialBase, TimeStampMixin
 from hubby.legistar import legistar_host
 
 Base = declarative_base()
