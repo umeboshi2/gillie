@@ -15,9 +15,11 @@ MainChannel = Backbone.Radio.channel 'global'
 MessageChannel = Backbone.Radio.channel 'messages'
 ResourceChannel = Backbone.Radio.channel 'resources'
 
+basicFields = ['name', 'title', 'description']
+
 EditForm = tc.renderable (model) ->
   tc.div '.listview-header', 'Document'
-  for field in ['name', 'title', 'description']
+  for field in basicFields
     make_field_input(field)(model)
   make_field_select(field, ['html', 'markdown'])(model)
   tc.div '#ace-editor', style:'position:relative;width:100%;height:40em;'
@@ -28,7 +30,7 @@ EditForm = tc.renderable (model) ->
 class BasePageEditor extends BootstrapFormView
   editorMode: 'html'
   editorContainer: 'ace-editor'
-  fieldList: ['name', 'title', 'description']
+  fieldList: basicFields
   template: EditForm
   ui: ->
     uiobject = make_field_input_ui @fieldList
@@ -45,7 +47,7 @@ class BasePageEditor extends BootstrapFormView
       @editor.setValue content
 
   updateModel: ->
-    for field in ['name', 'title', 'description']
+    for field in @fieldList
       @model.set field, @ui[field].val()
     # update from ace-editor
     @model.set 'content', @editor.getValue()

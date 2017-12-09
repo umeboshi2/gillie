@@ -11,14 +11,6 @@ navigate_to_url = require 'tbirds/util/navigate-to-url'
 
 MainChannel = Backbone.Radio.channel 'global'
 
-# FIXME, make a css manifest
-themes = [
-  'cornsilk'
-  'BlanchedAlmond'
-  'DarkSeaGreen'
-  'LavenderBlush'
-  ]
-
 chpass_form = tc.renderable () ->
   form_group_input_div
     input_id: 'input_password'

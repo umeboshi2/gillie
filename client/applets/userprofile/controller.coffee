@@ -51,8 +51,6 @@ class ToolbarView extends Backbone.Marionette.View
     navigate_to_url url
     
 class Controller extends MainController
-  #sidebarclass: SidebarView
-  #sidebar_model: side_bar_data
   layoutClass: ToolbarAppletLayout
   setup_layout_if_needed: ->
     super()
@@ -64,11 +62,9 @@ class Controller extends MainController
     @setup_layout_if_needed()
     require.ensure [], () =>
       ViewClass = require './mainview'
-      # current-user is always there when app is
-      # running
-      user = MainChannel.request 'current-user'
+      token = MainChannel.request 'main:app:decode-auth-token'
       view = new ViewClass
-        model: user
+        model: new Backbone.Model token
       @layout.showChildView 'content', view
     # name the chunk
     , 'userprofile-view-show-profile'
@@ -77,11 +73,9 @@ class Controller extends MainController
     @setup_layout_if_needed()
     require.ensure [], () =>
       ViewClass = require './mapview'
-      # current-user is always there when app is
-      # running
-      user = MainChannel.request 'current-user'
+      token = MainChannel.request 'main:app:decode-auth-token'
       view = new ViewClass
-        model: user
+        model: new Backbone.Model token
       @_show_content view
     # name the chunk
     , 'userprofile-view-map-view'
@@ -90,11 +84,9 @@ class Controller extends MainController
     @setup_layout_if_needed()
     require.ensure [], () =>
       ViewClass = require './configview'
-      # current-user is always there when app is
-      # running
-      user = MainChannel.request 'current-user'
+      token = MainChannel.request 'main:app:decode-auth-token'
       view = new ViewClass
-        model: user
+        model: new Backbone.Model token
       @layout.showChildView 'content', view
     # name the chunk
     , 'userprofile-view-edit-config'

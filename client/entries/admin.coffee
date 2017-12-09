@@ -6,6 +6,7 @@ ms = require 'ms'
 
 navigate_to_url = require 'tbirds/util/navigate-to-url'
 TopApp = require 'tbirds/top-app'
+objectEmpty = require '../object-empty'
 
 require './base'
 FooterView = require './footerview'
@@ -24,13 +25,9 @@ ms_remaining = (token) ->
   exp = new Date(token.exp * 1000)
   return exp - now
 
-# https://stackoverflow.com/a/32108184
-token_missing = (token) ->
-  (Object.keys(token).length == 0 && token.constructor == Object)  
-  
 access_time_remaining = ->
   token = MainChannel.request 'main:app:decode-auth-token'
-  if token_missing token
+  if objectEmpty token
     return 0
   remaining = ms_remaining token
   return Math.floor(remaining / 1000)
