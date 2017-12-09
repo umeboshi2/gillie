@@ -26,6 +26,31 @@ oc new-app python:3.5~https://github.com/umeboshi2/gillie.git
 
 * learn and setup alembic
 
+### Commix
+
+- MainView 
+  - collect days and hours with collections.defaultdict(list)
+  - templates:
+	- main-page.mako: small fullcalendar collect days
+		- view-event.mako
+		- view-venue.mako
+		- main-day-events.mako: collect hours
+		
+- HostView
+  - VenueViewer - manage venues, crud, view-venue-host.mako
+  - EventViewer: manage events
+	- view_events: fullcalendar
+	- view_event: view-event-host.mako, html event.description
+	- plan_event 
+		- drag object into calendar to choose date/time
+		- switches to form to create event
+	- edit_event: event form
+
+- Misc
+  - colander schema (colanderalchemy?)
+  - register account/email
+  
+	
 ### Auth 
 
 * use jsonwebtokens for auth, get it to match client code
