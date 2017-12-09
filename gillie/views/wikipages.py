@@ -23,6 +23,7 @@ rscroot = os.path.join(APIROOT, 'main')
 
 wiki_path = os.path.join(rscroot, 'wikipages')
 
+last_modified_format = "%a, %d %b %Y %H:%M:%S %Z"
 
 class BaseManager(object):
     def __init__(self, session):
@@ -62,7 +63,7 @@ class WikiPageView(BaseResource):
         self.limit = 10
 
     def collection_query(self):
-        return self.db.query(WikiPage.id, WikiPage.name, WikiPage.description,
+        return self.db.query(WikiPage.id, WikiPage.name,
                              WikiPage.created, WikiPage.updated)
 
     def serialize_object_for_collection_query(self, dbobj):
@@ -86,6 +87,7 @@ class WikiPageView(BaseResource):
                 with transaction.manager:
                     p = WikiPage()
                     p.name = name
+                    p.original = data['content']
                     soup = cleanup_wiki_page(data['content'])
                     p.content = str(soup.body)
                     self.db.add(p)
