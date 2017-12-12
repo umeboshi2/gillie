@@ -1,5 +1,6 @@
 Marionette = require 'backbone.marionette'
 TkApplet = require 'tbirds/tkapplet'
+AdminRouter = require '../../adminrouter'
 
 require './dbchannel'
 Controller = require './controller'
@@ -9,7 +10,7 @@ ResourceChannel = Backbone.Radio.channel 'resources'
 
 
 
-class Router extends Marionette.AppRouter
+class Router extends AdminRouter
   appRoutes:
     'dbdocs': 'list_pages'
     'dbdocs/documents': 'list_pages'
