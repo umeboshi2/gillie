@@ -64,8 +64,12 @@ class CrudController extends ExtraController
       MessageChannel.request 'danger', "Failed to get #{@objName}!"
 
 MainChannel.reply 'main:app:CrudController', ->
+  console.warn "use crud:controller instead"
   CrudController
-    
+
+MainChannel.reply 'crud:controller', ->
+  CrudController
+  
 module.exports = CrudController
 
 
