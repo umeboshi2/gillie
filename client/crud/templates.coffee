@@ -2,7 +2,10 @@ Backbone = require 'backbone'
 tc = require 'teacup'
 marked = require 'marked'
 
-{ form_group_input_div } = require 'tbirds/templates/forms'
+{ form_group_input_div 
+  make_field_input } = require 'tbirds/templates/forms'
+{ modal_close_button } = require 'tbirds/templates/buttons'
+
 capitalize = require 'tbirds/util/capitalize'
 
 MainChannel = Backbone.Radio.channel 'global'
@@ -13,7 +16,7 @@ MainChannel = Backbone.Radio.channel 'global'
 
 itemTemplateFactory = (opts) ->
   tc.renderable (model) ->
-    itemBtn = ".btn.btn-default.btn-sm.input-group-button"
+    itemBtn = ".btn.btn-default.btn-sm"
     tc.div '.col-sm-8', ->
       href = "##{opts.routeName}/#{opts.name}s/view/#{model.id}"
       tc.a href: href, model[opts.entryField]
@@ -30,6 +33,16 @@ listTemplateFactory = (opts) ->
       "Add #{capitalize opts.name}"
     tc.hr()
     tc.ul "##{opts.name}-container.list-group"
+
+
+formInputsFactory = (opts) ->
+  tc.renderable (model) ->
+    tc.div '.listview-header', model[opts.entryField]
+    for field in opts.fieldList
+      make_field_input(field)(model)
+    tc.input '.btn.btn-default', type:'submit', value:'Submit'
+    tc.div '.spinner.fa.fa-spinner.fa-spin'
+    
 
 confirmDeleteTemplate = tc.renderable (model) ->
   tc.div '.modal-dialog', ->
@@ -51,7 +64,9 @@ MainChannel.reply 'crud:template:item', (options) ->
   itemTemplateFactory options
 MainChannel.reply 'crud:template:list', (options) ->
   listTemplateFactory options
-  
+MainChannel.reply 'crud:template:form', (options) ->
+  formInputsFactory options
+    
   
 
 module.exports =
