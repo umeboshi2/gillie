@@ -97,6 +97,8 @@ class TokenView extends BaseView
     refresh = new AuthRefresh
     response = refresh.fetch()
     response.fail =>
+      msg = response.responseJSON
+      MessageChannel.request 'danger', msg.message
       @trigger 'save:form:failure', @model
     response.done =>
       @trigger 'save:form:success', @model
