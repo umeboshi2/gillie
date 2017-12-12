@@ -15,6 +15,9 @@ CrudController = MainChannel.request 'main:app:CrudController'
 
 
 class Controller extends CrudController
+  viewOptions:
+    fieldList: ['username', 'fullname', 'email']
+    entryField: 'fullname'
   channelName: 'useradmin'
   objName: 'user'
   modelName: 'user'
@@ -27,23 +30,26 @@ class Controller extends CrudController
   ############################################
   # useradmin users
   ############################################
-  list_users: ->
+  listUsers: ->
     require.ensure [], () =>
       ViewClass = require './userlist'
       @listItems ViewClass
     # name the chunk
     , 'useradmin-view-list-users'
     return
-    
-  add_new_user: ->
-    require.ensure [], () =>
-      { NewFormView } = require './useredit'
-      @addItem NewFormView
-    # name the chunk
-    , 'useradmin-view-add-user'
+
+  addItem: (ViewClass) ->
+    @setup_layout_if_needed()
+    view = new ViewClass 
+    @showChildView 'content', view
+    @scroll_top()
+
+  addNewUser: ->
+    NewFormView = MainChannel.request 'crud:view:new-item'
+    @addItem NewFormView @viewOptions
     return
 
-  view_user: (id) ->
+  viewUser: (id) ->
     require.ensure [], () =>
       ViewClass = require './userview'
       @viewItem ViewClass, id
@@ -51,12 +57,9 @@ class Controller extends CrudController
     , 'useradmin-view-user'
     return
     
-  edit_user: (id) ->
-    require.ensure [], () =>
-      { EditFormView } = require './useredit'
-      @editItem EditFormView, id
-    # name the chunk
-    , 'useradmin-edit-user'
+  editUser: (id) ->
+    EditFormView = MainChannel.request 'crud:view:edit-item'
+    @editItem EditFormView, id
     return
 
 module.exports = Controller
