@@ -1,6 +1,8 @@
 $= require 'jquery'
 _ = require 'underscore'
 Backbone = require 'backbone'
+Backbone.Relational = require 'backbone-relational'
+
 require 'backbone.routefilter'
 Marionette = require 'backbone.marionette'
 
@@ -8,7 +10,6 @@ Marionette = require 'backbone.marionette'
 #brjs = require 'backbone-relational-sync-jsonapi'
 #brjs.default Backbone, _
 
-require 'backbone-relational'
 #brj = require 'backbone-relational-jsonapi'
 #brj.default Backbone, _
 
@@ -35,9 +36,10 @@ MainChannel.reply 'main:app:set-pagesize', (pagesize) ->
 MainChannel.reply 'main:app:get-pagesize', ->
   localStorage.getItem 'page-size'
 
-
+if __DEV__
+  require '../inspector'
 require '../authmodels'
-require '../crudcontroller'
+require '../crud'
 require '../static-documents'
 #require '../site-schema'
 
