@@ -11,7 +11,7 @@ from pyramid.httpexceptions import HTTPForbidden
 from sqlalchemy.orm.exc import NoResultFound
 import transaction
 
-from trumpet.views.resourceviews import SimpleModelResource
+from trumpet.views.resourceviews import BaseModelResource
 
 from hornstone.alchemy import TimeStampMixin
 
@@ -31,14 +31,15 @@ from ..models.mymodel import Todo
 
     
 
-modelpath = os.path.join(APIROOT, '{model}')
+modelpath = os.path.join(APIROOT, 'todos')
 @resource(collection_path=modelpath,
           path=os.path.join(modelpath, '{id}'))
-class ModelView(SimpleModelResource):
+class ModelView(BaseModelResource):
+    model = Todo
     def __init__(self, request, context=None):
         super(ModelView, self).__init__(request, context=context)
         self.factory = SchemaFactory(NoForeignKeyWalker)
-
+        
     @property
     def model_map(self):
         return dict(todos=Todo)

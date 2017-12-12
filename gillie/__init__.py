@@ -8,8 +8,6 @@ from pyramid.renderers import JSON
 
 import pyramid_jsonapi
 
-from .models import mymodel
-
 def groupfinder(userid, request):
     """
     Default groupfinder implementaion for pyramid applications
@@ -35,14 +33,8 @@ def main(global_config, **settings):
     renderer = JSON()
     renderer.add_adapter(datetime.date, lambda obj, request: obj.isoformat())
     config.add_renderer('json', renderer)
-    
-    use_pj = asbool(settings.get('api.use_pyramid_jsonapi', False))
-    if use_pj:
-        pj = pyramid_jsonapi.PyramidJSONAPI(config, mymodel)
-        ep = pj.endpoint_data.endpoints
-    
-        pj.create_jsonapi()
-    
+
+
     # FIXME make tests
     JWT_SECRET = os.environ.get('JWT_SECRET', 'secret')
     config.set_jwt_authentication_policy(JWT_SECRET,
@@ -51,6 +43,14 @@ def main(global_config, **settings):
     authz_policy = ACLAuthorizationPolicy()
     config.set_authorization_policy(authz_policy)
 
+    use_pj = asbool(settings.get('api.use_pyramid_jsonapi', False))
+    if True or use_pj:
+        from .models.usergroup import User, Group
+        pj = pyramid_jsonapi.PyramidJSONAPI(config, [User, Group])
+        ep = pj.endpoint_data.endpoints
+    
+        pj.create_jsonapi()
+    
     config.include('.routes')
 
     config.add_route('meeting_calendar', '/rest/v0/main/hubcal')

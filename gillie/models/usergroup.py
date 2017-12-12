@@ -26,6 +26,9 @@ class UserGroup(Base, UserGroupMixin):
         self.user_id = uid
 
 
+USERMODELS = dict(users=User, groups=Group,
+                  UserGroup=UserGroup)
+
 # imports for populate()
 import transaction
 from sqlalchemy.exc import IntegrityError
@@ -52,6 +55,7 @@ def populate_users(session, admin_username='admin'):
         for uname in users:
             user = User(uname)
             user.password = encrypt_password(uname)
+            user.fullname = "Admin User"
             session.add(user)
             
 def populate_usergroups(session):
