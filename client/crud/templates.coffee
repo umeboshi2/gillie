@@ -32,7 +32,8 @@ listTemplateFactory = (opts) ->
     tc.button "#add-#{opts.name}.btn.btn-default.fa.fa-plus", ->
       "Add #{capitalize opts.name}"
     tc.hr()
-    tc.ul "##{opts.name}-container.list-group"
+    #tc.ul "##{opts.name}-container.list-group"
+    tc.div "##{opts.name}-container"
 
 
 formInputsFactory = (opts) ->
@@ -44,19 +45,20 @@ formInputsFactory = (opts) ->
     tc.div '.spinner.fa.fa-spinner.fa-spin'
     
 
-confirmDeleteTemplate = tc.renderable (model) ->
-  tc.div '.modal-dialog', ->
-    tc.div '.modal-content', ->
-      tc.h3 "Do you really want to delete #{model.name}?"
-      tc.div '.modal-body', ->
-        tc.div '#selected-children'
-      tc.div '.modal-footer', ->
-        tc.ul '.list-inline', ->
-          btnclass = 'btn.btn-default.btn-sm'
-          tc.li "#confirm-delete-button", ->
-            modal_close_button 'OK', 'check'
-          tc.li "#cancel-delete-button", ->
-            modal_close_button 'Cancel'
+confirmDeleteTemplateFactory = (opts) ->
+  tc.renderable (model) ->
+    tc.div '.modal-dialog', ->
+      tc.div '.modal-content', ->
+        tc.h3 "Do you really want to delete #{model[opts.entryField]}?"
+        tc.div '.modal-body', ->
+          tc.div '#selected-children'
+        tc.div '.modal-footer', ->
+          tc.ul '.list-inline', ->
+            btnclass = 'btn.btn-default.btn-sm'
+            tc.li "#confirm-delete-button", ->
+              modal_close_button 'OK', 'check'
+            tc.li "#cancel-delete-button", ->
+              modal_close_button 'Cancel'
     
 
 
@@ -66,8 +68,7 @@ MainChannel.reply 'crud:template:list', (options) ->
   listTemplateFactory options
 MainChannel.reply 'crud:template:form', (options) ->
   formInputsFactory options
-    
   
 
 module.exports =
-  confirmDeleteTemplate: confirmDeleteTemplate
+  confirmDeleteTemplateFactory: confirmDeleteTemplateFactory

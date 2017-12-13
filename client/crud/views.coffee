@@ -8,14 +8,14 @@ make_field_input_ui = require 'tbirds/util/make-field-input-ui'
 
 require 'tbirds/regions/bsmodal'
 { modal_close_button } = require 'tbirds/templates/buttons'
-{ confirmDeleteTemplate } = require './templates'
+{ confirmDeleteTemplateFactory } = require './templates'
 
 MainChannel = Backbone.Radio.channel 'global'
 MessageChannel = Backbone.Radio.channel 'messages'
 
 
-class ConfirmDeleteModal extends Backbone.Marionette.View
-  template: confirmDeleteTemplate
+class ConfirmDeleteModal extends Marionette.View
+  #template: confirmDeleteTemplate
   ui:
     confirm_delete: '#confirm-delete-button'
     cancel_button: '#cancel-delete-button'
@@ -31,7 +31,7 @@ class ConfirmDeleteModal extends Backbone.Marionette.View
     response.fail =>
       MessageChannel.request 'danger', "#{name} NOT deleted."
       
-class BaseItemView extends Backbone.Marionette.View
+class BaseItemView extends Marionette.View
   tagName: 'li'
   className: ->
     "list-group-item #{@item_type}-item row"
@@ -59,25 +59,32 @@ class BaseItemView extends Backbone.Marionette.View
       console.log "delete_#{@item_type}", @model
     view = new ConfirmDeleteModal
       model: @model
+      template: confirmDeleteTemplateFactory @options
     if __DEV__
       console.log 'modal view', view
     @_show_modal view, true
     #MainChannel.request 'main:app:show-modal', view, {backdrop:true}
     
 
-class BaseListView extends Backbone.Marionette.CompositeView
-  childViewContainer: "##{@item_type}-container"
+class BaseListView extends Marionette.View
+  regions: ->
+    itemList: "##{@item_type}-container"
   ui: ->
-    add_item: "#add-#{@item_type}"
-    
+    addItem: "#add-#{@item_type}"
+  onRender: ->
+    view = new Marionette.CollectionView
+      tagName: 'ul'
+      className: 'list-group'
+      collection: @collection
+      childView: @childView
+      childViewOptions: @options
+    @showChildView 'itemList', view
   events: ->
-    'click @ui.add_item': 'add_item'
-
-  add_item: ->
+    'click @ui.addItem': 'addItem'
+  addItem: ->
     # FIXME - fix url dont't add 's'
     navigate_to_url "##{@route_name}/#{@item_type}s/add"
-    
-
+ 
 class BaseFormView extends BootstrapFormView
   ui: ->
     return make_field_input_ui @getOption 'fieldList'
