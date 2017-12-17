@@ -5,10 +5,10 @@ Controller = require './controller'
 class Router extends Marionette.AppRouter
   appRoutes:
     'adminpanel/useradmin': 'listUsers'
-    'adminpanel/users/list': 'listUsers'
-    'adminpanel/users/add': 'addNewUser'
-    'adminpanel/users/view/:id': 'viewUser'
-    'adminpanel/users/edit/:id': 'editUser'
+    'adminpanel/user/list': 'listUsers'
+    'adminpanel/user/add': 'addNewUser'
+    'adminpanel/user/view/:id': 'viewUser'
+    'adminpanel/user/edit/:id': 'editUser'
 
 module.exports =
   router: Router

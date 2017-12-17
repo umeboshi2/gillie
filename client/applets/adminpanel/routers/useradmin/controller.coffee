@@ -11,16 +11,19 @@ MessageChannel = Backbone.Radio.channel 'messages'
 AppChannel = Backbone.Radio.channel 'useradmin'
 
 defaultColumns = ['id', 'username']
-CrudController = MainChannel.request 'main:app:CrudController'
+CrudController = MainChannel.request 'crud:Controller'
+
 
 
 class Controller extends CrudController
+  defaultColumns: ['id', 'username', 'fullname']
   viewOptions:
     fieldList: ['username', 'fullname', 'email']
     entryField: 'fullname'
+    modelName: 'user'
+    label: 'user'
+    routeName: 'adminpanel'
   channelName: 'useradmin'
-  objName: 'user'
-  modelName: 'user'
   initialize: (options) ->
     @applet = MainChannel.request 'main:applet:get-applet', 'adminpanel'
     @mainController = @applet.router.controller
@@ -38,15 +41,9 @@ class Controller extends CrudController
     , 'useradmin-view-list-users'
     return
 
-  addItem: (ViewClass) ->
-    @setup_layout_if_needed()
-    view = new ViewClass 
-    @showChildView 'content', view
-    @scroll_top()
-
   addNewUser: ->
     NewFormView = MainChannel.request 'crud:view:new-item'
-    @addItem NewFormView @viewOptions
+    @addItem NewFormView
     return
 
   viewUser: (id) ->

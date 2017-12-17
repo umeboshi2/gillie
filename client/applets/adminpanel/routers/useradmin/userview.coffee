@@ -15,7 +15,7 @@ dsc_template = tc.renderable (model) ->
   tc.div '.listview-header', ->
     tc.text "Viewing User #{model.username}"
   tc.hr()
-  tc.a href:'#adminpanel/users/list', 'List Users'
+  tc.a href:'#adminpanel/user/list', 'List Users'
   tc.article '.document-view.content', ->
     tc.div '.body', ->
       tc.text "This is #{model.fullname}"
@@ -32,7 +32,7 @@ class UserView extends Backbone.Marionette.View
     'click @ui.copy_btn': 'copy_user'
     'click @ui.edit_btn': 'edit_user'
   edit_user: ->
-    navigate_to_url "#adminpanel/users/edit/#{@model.id}"
+    navigate_to_url "#adminpanel/user/edit/#{@model.id}"
   copy_user: ->
     foo = 'bar'
     MessageChannel.request 'warning', "not implemented"
