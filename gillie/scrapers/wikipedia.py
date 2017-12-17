@@ -1,9 +1,8 @@
 import os
 
 from bs4 import BeautifulSoup
+from hornstone.scrapers.base import CacheCollector
 
-from .basecollector import BaseCollector
-from .cachecollector import BaseCacheCollector
 
 url_prefix = 'http://en.wikipedia.org/wiki/'
 
@@ -13,7 +12,7 @@ def clear_elements(soup, selector):
     while len(elements):
         element = elements.pop()
         element.clear()
-        
+
 
 def cleanup_wiki_page(content):
     soup = BeautifulSoup(content, 'lxml')
@@ -22,7 +21,7 @@ def cleanup_wiki_page(content):
                 'footer-icons']:
         selector = '#%s' % cid
         clear_elements(soup, selector)
-    for classid in ['mw-editsection',]:
+    for classid in ['mw-editsection']:
         selector = '.%s' % classid
         clear_elements(soup, selector)
     anchors = soup.select('a')
@@ -39,39 +38,12 @@ def cleanup_wiki_page(content):
                 anchor['data-orig-href'] = anchor['href']
                 anchor['href'] = '#wikipages/view/%s' % name
     return soup
-    
-class WikiCollector(BaseCollector):
-    def __init__(self, cachedir='data'):
-        super(WikiCollector, self).__init__()
-        self.cache = BaseCacheCollector(cachedir=cachedir)
-        self.pagecollector = BaseCollector()
 
-    def _tree_url(self, genus, species):
-        page = '%s_%s' % (genus.capitalize(), species)
-        return os.path.join(url_prefix, page)
-        
-    def _get_url(self, url):
-        data = self.cache.get(url)
-        if data is None:
-            print("Retrieving %s" % url)
-            self.pagecollector.retrieve_page(url)
-            self.cache.save(url, self.pagecollector)
-            data = self.cache.get(url)
-        return data
 
-    def get_page(self, genus, species):
-        url = self._tree_url(genus, species)
-        return self._get_url(url)
-        
-    def get_genus_page(self, genus):
-        url = os.path.join(url_prefix, genus.capitalize())
-        return self._get_url(url)
-
+class WikiCollector(CacheCollector):
     def get_wiki_page(self, name):
         url = os.path.join(url_prefix, name)
-        return self._get_url(url)
-        
-        
-        
-
-
+        data = self.get_from_cache(url)
+        if data is None:
+            self.save_to_cache(url)
+        return self.get_from_cache(url)
