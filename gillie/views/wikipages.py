@@ -59,7 +59,7 @@ class WikiPageView(BaseResource):
     def __init__(self, request, context=None):
         super(WikiPageView, self).__init__(request, context=context)
         self.mgr = WikiPageManager(self.db)
-        self.wikicollector = WikiCollector()
+        self.wikicollector = WikiCollector(format='json')
         self.limit = 10
 
     def collection_query(self):
