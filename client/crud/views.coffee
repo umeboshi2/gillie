@@ -26,9 +26,9 @@ class ConfirmDeleteModal extends Marionette.View
   confirm_delete: ->
     name = @model.get 'name'
     response = @model.destroy()
-    response.done =>
+    response.done ->
       MessageChannel.request 'success', "#{name} deleted.",
-    response.fail =>
+    response.fail ->
       MessageChannel.request 'danger', "#{name} NOT deleted."
       
 class BaseItemView extends Marionette.View
@@ -45,7 +45,7 @@ class BaseItemView extends Marionette.View
     'click @ui.delete_item': 'delete_item'
     
   edit_item: ->
-    navigate_to_url "##{@route_name}/#{@item_type}s/edit/#{@model.id}"
+    navigate_to_url "##{@route_name}/#{@item_type}/edit/#{@model.id}"
     
   _show_modal: (view, backdrop) ->
     app = MainChannel.request 'main:app:object'
@@ -63,7 +63,6 @@ class BaseItemView extends Marionette.View
     if __DEV__
       console.log 'modal view', view
     @_show_modal view, true
-    #MainChannel.request 'main:app:show-modal', view, {backdrop:true}
     
 
 class BaseListView extends Marionette.View
@@ -82,8 +81,7 @@ class BaseListView extends Marionette.View
   events: ->
     'click @ui.addItem': 'addItem'
   addItem: ->
-    # FIXME - fix url dont't add 's'
-    navigate_to_url "##{@route_name}/#{@item_type}s/add"
+    navigate_to_url "##{@route_name}/#{@item_type}/add"
  
 class BaseFormView extends BootstrapFormView
   ui: ->
@@ -94,21 +92,26 @@ class BaseFormView extends BootstrapFormView
       @model.set field, @ui[field].val()
 
   getViewUrl: ->
-    return "##{@options.routeName}/#{@Options.modelName}/view/#{@model.id}" 
-
+    return "##{@options.routeName}/#{@options.modelName}/view/#{@model.id}"
+    
   onSuccess: (model) ->
     name = @model.get @options.entryField
     msg = "#{name} saved successfully."
     MessageChannel.request 'success', msg
-    navigate_to_url url @getViewUrl()
+    navigate_to_url @getViewUrl()
 
 class BaseNewFormView extends BaseFormView
   createModel: ->
-    @options.dbchannel.request "db:#{@options.modelName}:new"
+    name = @getOption 'modelName'
+    # FIXME fix tbirds form view to use Mn.Object
+    channel = Backbone.Radio.channel @getOption 'channelName'
+    return channel.request "db:#{name}:new"
 
   saveModel: ->
-    req = "db:#{@options.modelName}:collection"
-    collection = @options.dbchannel.request req
+    name = @getOption 'modelName'
+    # FIXME fix tbirds form view to use Mn.Object
+    channel = Backbone.Radio.channel @getOption 'channelName'
+    collection = channel.request "db:#{name}:collection"
     collection.add @model
     super()
     

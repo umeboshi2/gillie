@@ -16,7 +16,10 @@ defaultColumns = ['id', 'name']
 class CrudController extends ExtraController
   defaultColumns: ['id', 'name']
   viewOptions:
+    fieldList: ['name']
     entryField: 'name'
+    modelName: 'model'
+    label: 'Model'
   setup_layout_if_needed: ->
     @mainController.setup_layout_if_needed()
   showChildView: (region, view) ->
@@ -24,7 +27,7 @@ class CrudController extends ExtraController
     
   listItems: (ViewClass) ->
     @setup_layout_if_needed()
-    collection = @channel.request "db:#{@modelName}:collection"
+    collection = @channel.request "db:#{@viewOptions.modelName}:collection"
     response = collection.fetch
       data:
         columns: @defaultColumns
@@ -34,19 +37,11 @@ class CrudController extends ExtraController
       @showChildView 'content', view
       @scroll_top()
     response.fail =>
-      MessageChannel.request 'danger', "Failed to get #{@objName}s!"
-
-  addItem: (ViewClass) ->
-    @setup_layout_if_needed()
-    options = _.extend {}, @viewOptions
-    options.template = MainChannel.request 'crud:template:form', options
-    view = new ViewClass @viewOptions
-    @showChildView 'content', view
-    @scroll_top()
+      MessageChannel.request 'danger', "Failed to get #{@viewOptions.label}s!"
 
   viewItem: (ViewClass, id) ->
     @setup_layout_if_needed()
-    model = @channel.request "db:#{@modelName}:get", id
+    model = @channel.request "db:#{@viewOptions.modelName}:get", id
     response = model.fetch()
     response.done =>
       view = new ViewClass
@@ -54,14 +49,27 @@ class CrudController extends ExtraController
       @showChildView 'content', view
       @scroll_top()
     response.fail =>
-      MessageChannel.request 'danger', "Failed to get #{@objName}!"
+      MessageChannel.request 'danger', "Failed to get #{@viewOptions.label}!"
 
-  editItem: (ViewClass, id, options) ->
+  _formViewOptions: (options) ->
     options = options || {}
     options = _.extend options, @viewOptions
     options.template = MainChannel.request 'crud:template:form', options
+    # FIXME fix tbirds form view to use Mn.Object
+    options.channelName = @getOption 'channelName'
+    return options
+    
+  addItem: (ViewClass) ->
     @setup_layout_if_needed()
-    model = @channel.request "db:#{@modelName}:get", id
+    options = @_formViewOptions()
+    view = new ViewClass options
+    @showChildView 'content', view
+    @scroll_top()
+
+  editItem: (ViewClass, id, options) ->
+    @setup_layout_if_needed()
+    options = @_formViewOptions options
+    model = @channel.request "db:#{@viewOptions.modelName}:get", id
     options.model = model
     response = model.fetch()
     response.done =>
@@ -69,13 +77,13 @@ class CrudController extends ExtraController
       @showChildView 'content', view
       @scroll_top()
     response.fail =>
-      MessageChannel.request 'danger', "Failed to get #{@objName}!"
+      MessageChannel.request 'danger', "Failed to get #{@viewOptions.label}!"
 
 MainChannel.reply 'main:app:CrudController', ->
-  console.warn "use crud:controller instead"
+  console.warn "use crud:Controller instead"
   CrudController
 
-MainChannel.reply 'crud:controller', ->
+MainChannel.reply 'crud:Controller', ->
   CrudController
   
 module.exports = CrudController

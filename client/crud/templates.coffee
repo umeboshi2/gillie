@@ -18,7 +18,7 @@ itemTemplateFactory = (opts) ->
   tc.renderable (model) ->
     itemBtn = ".btn.btn-default.btn-sm"
     tc.div '.col-sm-8', ->
-      href = "##{opts.routeName}/#{opts.name}s/view/#{model.id}"
+      href = "##{opts.routeName}/#{opts.name}/view/#{model.id}"
       tc.a href: href, model[opts.entryField]
     tc.div '.col-sm-4', ->
       tc.div '.btn-group.pull-right', ->
