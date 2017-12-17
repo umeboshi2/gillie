@@ -1,20 +1,8 @@
-config = require 'tbirds/app-config'
-config.userMenuApp = require './user-menu-view'
-config.hasUser = true
+config = require './base-config'
 config.needLogin = true
-config.appletRoutes.profile = 'userprofile'
 config.frontdoorApplet = 'adminpanel'
 
-config.brand.label = 'Gillie'
 config.brand.url = '/'
-
-config.authToken = {}
-config.authToken.refreshInterval = '5m'
-# for testing authToken
-if __DEV__ and false
-  config.authToken.refreshInterval = '10s'
-config.authToken.refreshIntervalMultiple = 3
-config.authToken.loginUrl = '#adminpanel/login'
 
 misc_menu =
   label: 'Misc Applets'
@@ -36,10 +24,16 @@ misc_menu =
 
 UserAdmin =
   label: "User Admin"
-  url: "#useradmin"
+  url: "#adminpanel/useradmin"
+  needUser: true
+  
+SiteDocs =
+  label: "Site Docs"
+  url: "#dbdocs"
   needUser: true
   
 config.navbarEntries = [
+  SiteDocs
   UserAdmin
   misc_menu
   ]
