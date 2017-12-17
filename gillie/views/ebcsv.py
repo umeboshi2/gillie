@@ -39,7 +39,6 @@ class EbClzView(SimpleModelResource):
         super(EbClzView, self).__init__(request, context=context)
         self.limit = 25
         self._use_pagination = True
-        self.model = EBMODELS.get(self.request.matchdict['model'])
         self.factory = SchemaFactory(NoForeignKeyWalker)
 
     @property

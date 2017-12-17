@@ -24,13 +24,9 @@ modelpath = os.path.join(APIROOT, 'useradmin', '{model}')
           path=os.path.join(modelpath, '{id}'))
 class GenericView(SimpleModelResource):
     def __init__(self, request, context=None):
-        print('GENERICVIEW.__init__')
         super(GenericView, self).__init__(request, context=context)
-        #import pudb ; pudb.set_trace()
-        #self.model = self.model_map.get(self.request.matchdict['model'])
-        print('SUPTER GENERICVIEW.__init__')
         self.factory = SchemaFactory(NoForeignKeyWalker)
-        
+
     @property
     def model_map(self):
         return USERMODELS
@@ -49,4 +45,3 @@ class GenericView(SimpleModelResource):
             self.db.add(m)
             self.db.flush()
         return self.serialize_object(m)
-
