@@ -15,6 +15,7 @@ defaultColumns = ['id', 'name']
 # @mainController should be set in initialize
 class CrudController extends ExtraController
   defaultColumns: ['id', 'name']
+  channelName: 'global'
   viewOptions:
     fieldList: ['name']
     entryField: 'name'
@@ -27,7 +28,7 @@ class CrudController extends ExtraController
     
   listItems: (ViewClass) ->
     @setup_layout_if_needed()
-    collection = @channel.request "db:#{@viewOptions.modelName}:collection"
+    collection = @getChannel().request "db:#{@viewOptions.modelName}:collection"
     response = collection.fetch
       data:
         columns: @defaultColumns
@@ -41,7 +42,7 @@ class CrudController extends ExtraController
 
   viewItem: (ViewClass, id) ->
     @setup_layout_if_needed()
-    model = @channel.request "db:#{@viewOptions.modelName}:get", id
+    model = @getChannel().request "db:#{@viewOptions.modelName}:get", id
     response = model.fetch()
     response.done =>
       view = new ViewClass
@@ -69,7 +70,7 @@ class CrudController extends ExtraController
   editItem: (ViewClass, id, options) ->
     @setup_layout_if_needed()
     options = @_formViewOptions options
-    model = @channel.request "db:#{@viewOptions.modelName}:get", id
+    model = @getChannel().request "db:#{@viewOptions.modelName}:get", id
     options.model = model
     response = model.fetch()
     response.done =>
