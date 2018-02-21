@@ -9,7 +9,6 @@ MessageChannel = Backbone.Radio.channel 'messages'
 AppChannel = Backbone.Radio.channel 'useradmin'
 
 ########################################
-Views = require './basecrudviews'
 BaseItemView = MainChannel.request 'crud:view:item'
 BaseListView = MainChannel.request 'crud:view:list'
 
