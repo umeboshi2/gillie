@@ -6,36 +6,26 @@ ms = require 'ms'
 
 navigate_to_url = require 'tbirds/util/navigate-to-url'
 TopApp = require 'tbirds/top-app'
+setupAuthModels = require 'tbirds/authmodels'
+TH = require 'tbirds/token-handler'
+
 objectEmpty = require '../object-empty'
 
 require './base'
 FooterView = require './footerview'
-TH = require './token-handler'
-
 pkg = require '../../package.json'
 pkgmodel = new Backbone.Model pkg
 
 MainAppConfig = require './index-config'
+setupAuthModels MainAppConfig
 
 MainChannel = Backbone.Radio.channel 'global'
 MessageChannel = Backbone.Radio.channel 'messages'
 
-ms_remaining = (token) ->
-  now = new Date()
-  exp = new Date(token.exp * 1000)
-  return exp - now
-
-access_time_remaining = ->
-  token = MainChannel.request 'main:app:decode-auth-token'
-  if objectEmpty token
-    return 0
-  remaining = ms_remaining token
-  return Math.floor(remaining / 1000)
-  
 show_footer = ->
   token = MainChannel.request 'main:app:decode-auth-token'
   pkgmodel.set 'token', token
-  pkgmodel.set 'remaining', TH.access_time_remaining()
+  pkgmodel.set 'remaining', TH.accessTimeRemaining()
   view = new FooterView
     model: pkgmodel
   footer_region = app.getView().getRegion 'footer'
@@ -55,7 +45,7 @@ app.on 'before:start', ->
   theme = MainChannel.request 'main:app:get-theme'
   theme = if theme then theme else 'vanilla'
   MainChannel.request 'main:app:switch-theme', theme
-
+  
 app.on 'start', ->
   #show_footer()
   #setInterval show_footer, ms '5s'
@@ -64,12 +54,10 @@ app.on 'start', ->
     refreshIntervalMultiple: MainAppConfig.authToken.refreshIntervalMultiple
     loginUrl: '#frontdoor/login'
   keep_fresh = ->
-    TH.keep_token_fresh refreshOpts
+    TH.keepTokenFresh refreshOpts
   setInterval keep_fresh, ms '10s'
-  
-  
-  
-TH.start_user_app app, MainAppConfig
+
+TH.startUserApp app, MainAppConfig
   
 module.exports = app
 

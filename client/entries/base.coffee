@@ -38,7 +38,7 @@ MainChannel.reply 'main:app:get-pagesize', ->
 
 if __DEV__
   require '../inspector'
-require '../authmodels'
+#require '../authmodels'
 require '../crud'
 require '../static-documents'
 #require '../site-schema'
