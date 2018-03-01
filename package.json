@@ -36,6 +36,7 @@
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.5",
     "font-awesome": "^4.7.0",
+    "gentelella": "^1.4.0",
     "google-fonts-webpack-plugin": "^0.4.3",
     "gulp": "^3.9.1",
     "gulp-coffee": "^2.3.5",
@@ -87,7 +88,7 @@
     "lovefield": "^2.1.12",
     "qs": "^6.5.1",
     "rst2mdown": "^0.1.0",
-    "tbirds": "^0.3.25",
+    "tbirds": "^0.3.29",
     "wikipedia-js": "0.0.6",
     "yamljs": "^0.3.0"
   }
