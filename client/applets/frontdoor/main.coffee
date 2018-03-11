@@ -11,7 +11,7 @@ class Router extends Marionette.AppRouter
     '': 'frontdoor'
     'frontdoor': 'frontdoor'
     'frontdoor/view': 'frontdoor'
-    'frontdoor/view/:name': 'view_page'
+    'frontdoor/view/*name': 'viewPage'
     'frontdoor/login': 'show_login'
     'frontdoor/logout': 'show_logout'
     #FIXME

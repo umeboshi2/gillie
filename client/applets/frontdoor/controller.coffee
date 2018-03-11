@@ -1,3 +1,4 @@
+path = require 'path'
 Backbone = require 'backbone'
 Marionette = require 'backbone.marionette'
 
@@ -15,16 +16,22 @@ DocChannel = Backbone.Radio.channel 'static-documents'
 ResourceChannel = Backbone.Radio.channel 'resources'
 
 tc = require 'teacup'
+urlRoot = "/assets/dev/WebAssembly/design"
 
-class ReadMeModel extends Backbone.Model
-  url: "https://raw.githubusercontent.com/umeboshi2/gillie/master/README.md"
+class AssetDocument extends Backbone.Model
   fetch: (options) ->
     options = options or {}
     options.dataType = 'text'
     super options
   parse: (response) ->
     content: response
+
+class AssetCollection extends Backbone.Collection
+  urlRoot: urlRoot
     
+class ReadMeModel extends AssetDocument
+  url: "/assets/dev/WebAssembly/design/README.md"
+
 frontdoor_template = tc.renderable () ->
   tc.div '#main-content.col-sm-10.col-sm-offset-1'
   
@@ -102,7 +109,7 @@ class Controller extends MainController
   view_readme: ->
     @setup_layout_if_needed()
     model = new ReadMeModel
-    if true and __DEV__
+    if false and __DEV__
       readme = require 'raw-loader!../../../README.md'
       model = new Backbone.Model content:readme
       @_view_resource model
@@ -112,7 +119,19 @@ class Controller extends MainController
       @_view_resource model
     response.fail ->
       MessageChannel.request 'warning', 'failed to get readme'
-      
+
+  viewPage: (name) ->
+    console.log "NAME IS", name
+    @setup_layout_if_needed()
+    model = new AssetDocument()
+    model.url = path.join urlRoot, name
+    console.log "MODEL IS", model
+    response = model.fetch()
+    response.done =>
+      @_view_resource model
+    response.fail ->
+      MessageChannel.request 'warning', "failed to get #{name}"
+    
   default_view: ->
     @setup_layout_if_needed()
     #@show_login()

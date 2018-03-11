@@ -1,3 +1,4 @@
+path = require 'path'
 $= require 'jquery'
 Backbone = require 'backbone'
 Marionette = require 'backbone.marionette'
@@ -6,14 +7,24 @@ marked = require 'marked'
 
 MainChannel = Backbone.Radio.channel 'global'
 
+class Renderer extends marked.Renderer
+  link: (href, title, text) ->
+    dirname = path.dirname location.hash
+    if dirname is '.'
+      dirname = '#frontdoor/view'
+    unless href.startsWith 'http'
+      href = path.join dirname, href
+    super href, title, text
+
+renderer = new Renderer
 DefaultStaticDocumentTemplate = tc.renderable (doc) ->
   tc.article '.document-view.content', ->
     tc.div '.body', ->
-      tc.raw marked doc.content
+      tc.raw marked doc.content, renderer:renderer
 
 THEMES = ['vanilla', 'cornsilk', 'BlanchedAlmond', 'DarkSeaGreen',
   'LavenderBlush']
-  
+
 class ThemeSwitchView extends Backbone.Marionette.View
   ui:
     stylesheet: '#main-stylesheet'
